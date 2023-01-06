@@ -1,5 +1,5 @@
 window.addEventListener('load', function () {
-    const socket = io("ws://localhost:8080", {
+    const socket = io("ws://localhost:8085", {
         cors: {
             origin: "*",
             methods: ["GET", "POST"]
