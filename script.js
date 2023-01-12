@@ -36,6 +36,9 @@ window.addEventListener('load', function () {
         li.appendChild(document.createTextNode(data.message));
         li.setAttribute("class", "bot");
         ul.appendChild(li);
+        if(data.weather){
+            console.log(data.weather);
+        }
     });
 
     socket.on('writing', function (data) {
