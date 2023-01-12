@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Change IP Adress to Server Adress
+      - name: Change IP Address to Server Address
         run: |
           sed -i 's/localhost/34.141.74.153/g' script.js
           sed -i 's/localhost/34.141.74.153/g' index.html
@@ -53,4 +53,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           platforms: linux/arm64/v8, linux/amd64
-          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:prod
+          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:production
