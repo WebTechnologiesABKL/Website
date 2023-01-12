@@ -15,8 +15,6 @@ jobs:
         run: |
           sed -i 's/localhost/34.141.74.153/g' script.js
           sed -i 's/localhost/34.141.74.153/g' index.html
-          cat script.js
-          cat index.html
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -28,8 +26,5 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          platforms: linux/arm64/v8, linux/amd64
-          push: true
-          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:prod
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64/v8 --push -t ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:prod .
