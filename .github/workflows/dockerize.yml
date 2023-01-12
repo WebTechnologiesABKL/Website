@@ -53,4 +53,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           platforms: linux/arm64/v8, linux/amd64
-          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:production
+          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website-prod:latest
