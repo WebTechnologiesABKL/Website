@@ -28,5 +28,5 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          push: true
+          platforms: linux/arm64/v8, linux/amd64
           tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:latest
