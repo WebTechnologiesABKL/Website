@@ -13,9 +13,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Change IP Address to Server Address
         run: |
-          ls -la
           sed -i 's/localhost/34.141.74.153/g' script.js
           sed -i 's/localhost/34.141.74.153/g' index.html
+          cat script.js
+          cat index.html
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
