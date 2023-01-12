@@ -13,6 +13,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Change IP Address to Server Address
         run: |
+          ls -la
           sed -i 's/localhost/34.141.74.153/g' script.js
           sed -i 's/localhost/34.141.74.153/g' index.html
       - name: Set up QEMU
