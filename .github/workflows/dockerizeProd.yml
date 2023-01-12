@@ -1,4 +1,4 @@
-name: dockerize
+name: dockerizeProd
 
 on:
   push:
@@ -6,27 +6,27 @@ on:
       - 'main'
 
 jobs:
-  docker:
+  prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Set up QEMU
+      - name: Change IP Address to Server Address
+        run: |
+          sed -i 's/localhost/34.141.74.153/g' script.js
+          sed -i 's/localhost/34.141.74.153/g' index.html
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Login to Registry
+      - name: Login to Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ secrets.REGISTRY_HOST }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
           platforms: linux/arm64/v8, linux/amd64
-          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:latest
+          tags: ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:prod
