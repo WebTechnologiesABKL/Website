@@ -22,8 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
+          sudo apt-get install tree
           npm install --include=dev
           npm run build
+          tree
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
