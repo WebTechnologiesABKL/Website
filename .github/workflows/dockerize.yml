@@ -21,11 +21,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: |
-          sudo apt-get install tree
-          npm install --include=dev
-          npm run build
-          tree
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -36,6 +31,11 @@ jobs:
           registry: ${{ secrets.REGISTRY_HOST }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Build static website
+        run: |
+          npm install --include=dev
+          npm run build
+          tree out
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
