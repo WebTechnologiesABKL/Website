@@ -35,9 +35,6 @@ jobs:
         run: |
           cp .env.local.template .env.local
           sed -i 's/-_dev-prod_-/dev/g' .env.local
-          npm install --include=dev
-          npm run build
-          tree out
       - name: Build and push
         run: |
           docker buildx build --platform linux/amd64,linux/arm64/v8 -t ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:latest --push .
@@ -70,9 +67,6 @@ jobs:
         run: |
           cp .env.local.template .env.local
           sed -i 's/-_dev-prod_-/prod/g' .env.local
-          npm install --include=dev
-          npm run build
-          tree out
       - name: Build and push
         run: |
           docker buildx build --platform linux/amd64,linux/arm64/v8 -t ${{ secrets.REGISTRY_HOST }}/webtechnologiesabkl/registry/website:prod --push .
