@@ -1,3 +1,5 @@
+[![dockerize](https://github.com/WebTechnologiesABKL/Website/actions/workflows/dockerize.yml/badge.svg?branch=main&event=deployment_status)](https://github.com/WebTechnologiesABKL/Website/actions/workflows/dockerize.yml)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
