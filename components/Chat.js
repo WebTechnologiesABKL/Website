@@ -6,7 +6,7 @@ import Script from "next/script";
 import Image from "next/image";
 import Minecraft from '/public/minecraft.jpg'
 import { useEffect } from 'react'
-import io from 'Socket.IO-client'
+import io from 'socket.io-client'
 
 let socket
 
