@@ -158,6 +158,8 @@ export default function Chatbot() {
                         key={index}
                         className={`bg-white p-2 rounded-lg mb-4 flex-shrink-0 text-black ${
                             message.isUser ? 'ml-auto' : 'mr-auto'
+                        } ${
+                            message.isUser ? '' : 'bg-slate-600'
                         }`}
                     >
                         <p className="text-sm">{message.text}</p>
