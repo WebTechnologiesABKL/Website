@@ -36,12 +36,12 @@ export default function Chatbot() {
             })
             socket.on("welcome", function(data){
                 let message = data.message
-                setMessages([...messages, { text: message, isUser: false }]);
+                setMessages(currentArray => {return [...currentArray, { text: message, isUser: false, writing: false }]});
             })
 
             socket.on("chat", function(data){
                 let message = data.message
-                setMessages([...messages, { text: message, isUser: false }]);
+                setMessages(currentArray => {return [...currentArray, { text: message, isUser: false, writing: false }]});
                 if(data.weather){
                     let weather = data.weather
                     let time = new Date(data.time)
@@ -52,9 +52,9 @@ export default function Chatbot() {
 
             socket.on("writing", function(data){
                 if(data.active){
-                    setMessages([...messages, { text: "...", isUser: false }])
+                    setMessages(currentArray => {return [...currentArray, { text: "...", isUser: false, writing: true }]});
                 }else{
-                    setMessages(messages.slice(0, -1))
+                    setMessages((currentArray) => currentArray.filter((item) => !item.writing));
                 }
             })
         }
@@ -135,7 +135,7 @@ export default function Chatbot() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setMessages([...messages, { text: input, isUser: true }]);
+        setMessages(currentArray => {return [...currentArray, { text: input, isUser: true, writing: false }]});
         socket.emit('chat', {
             'message': input
         })
