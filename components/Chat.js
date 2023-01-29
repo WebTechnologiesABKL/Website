@@ -156,13 +156,16 @@ export default function Chatbot() {
                 {messages.map((message, index) => (
                     <div
                         key={index}
-                        className={`bg-white p-2 rounded-lg mb-4 flex-shrink-0 text-black font-minecraft ${
+                        className={`bg-white p-2 mb-4 flex-shrink-0 w-fit text-black font-minecraft ${
                             message.isUser ? 'ml-auto' : 'mr-auto'
                         } ${
                             message.isUser ? '' : 'bg-slate-600'
-                        }`}
+                        } ${
+                            message.isUser ? 'rounded-bl-3xl rounded-tl-3xl rounded-tr-xl' : 'rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                        }
+                        `}
                     >
-                        <p className="text-sm">{message.text}</p>
+                        <p className="text-base">{message.text}</p>
                     </div>
                 ))}
             </main>
