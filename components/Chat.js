@@ -27,33 +27,102 @@ export default function Chatbot() {
     }, [videoName]);
 
     const socketInitializer = async () => {
-        if(!socket || !socket.connected){
+        if(!socket || !socket.connected) {
             //await fetch("/api/socket")
             socket = io('ws://' + process.env.SERVER + ':8085')
 
             socket.on('connect', () => {
                 console.log('connected')
             })
-            socket.on("welcome", function(data){
+            socket.on("welcome", function (data) {
                 let message = data.message
-                setMessages(currentArray => {return [...currentArray, { text: message, isUser: false, writing: false }]});
+                setMessages(currentArray => {
+                    return [...currentArray, {
+                        text: message,
+                        isUser: false,
+                        writing: false,
+                        image: null,
+                        forecast: null,
+                        weather: null
+                    }]
+                });
             })
 
-            socket.on("chat", function(data){
+            socket.on("chat", function (data) {
                 let message = data.message
-                setMessages(currentArray => {return [...currentArray, { text: message, isUser: false, writing: false }]});
-                if(data.weather){
+                setMessages(currentArray => {
+                    return [...currentArray, {
+                        text: message,
+                        isUser: false,
+                        writing: false,
+                        image: null,
+                        forecast: null,
+                        weather: null
+                    }]
+                });
+                if (data.weather) {
                     let weather = data.weather
                     let time = new Date(data.time)
                     changeVideo(weather, time)
                     console.log(weather)
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: null,
+                            isUser: false,
+                            writing: false,
+                            image: null,
+                            forecast: null,
+                            weather: weather
+                        }]
+                    });
                 }
             })
 
-            socket.on("writing", function(data){
-                if(data.active){
-                    setMessages(currentArray => {return [...currentArray, { text: "...", isUser: false, writing: true }]});
-                }else{
+            socket.on("image", function (data) {
+                if (data.image) {
+                    console.log(data.image)
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: null,
+                            isUser: false,
+                            writing: false,
+                            image: data.image,
+                            forecast: null,
+                            weather: null
+                        }]
+                    });
+                }
+            })
+
+            socket.on("forecast", function (data) {
+                if (data.forecast) {
+                    console.log(data.forecast)
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: null,
+                            isUser: false,
+                            writing: false,
+                            image: null,
+                            forecast: data.forecast,
+                            weather: null
+                        }]
+                    });
+                }
+            })
+
+            socket.on("writing", function (data) {
+                if (data.active) {
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: "...",
+                            isUser: false,
+                            writing: true,
+                            image: null,
+                            forecast: null,
+                            weather: null
+                        }]
+                    });
+                } else {
                     setMessages((currentArray) => currentArray.filter((item) => !item.writing));
                 }
             })
@@ -121,6 +190,13 @@ export default function Chatbot() {
                         videoName = "Snow_night"
                     }
                     break;
+                case "sleet":
+                    if(isDay){
+                        videoName = "Snow_day"
+                    }else{
+                        videoName = "Snow_night"
+                    }
+                    break;
                 case "thunderstorm":
                     if(isDay){
                         videoName = "Thunder_day"
@@ -135,7 +211,7 @@ export default function Chatbot() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setMessages(currentArray => {return [...currentArray, { text: input, isUser: true, writing: false }]});
+        setMessages(currentArray => {return [...currentArray, { text: input, isUser: true, writing: false, image: null, forecast: null, weather: null }]});
         socket.emit('chat', {
             'message': input
         })
@@ -153,21 +229,24 @@ export default function Chatbot() {
                 <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
             </header>
             <main className="flex-1 overflow-y-scroll h-full justify-end overscroll-contain p-4">
-                {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft ${
-                            message.isUser ? 'ml-auto' : 'mr-auto'
-                        } ${
-                            message.isUser ? '' : 'bg-slate-600'
-                        } ${
-                            message.isUser ? 'rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
-                        } 
-                        `}
-                    >
-                        <p className="text-base">{message.text}</p>
-                    </div>
-                ))}
+                {messages.map((message, index) => {
+                    if(message.text){
+                        return (<div
+                            key={index}
+                            className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft  ${
+                                message.isUser ? 'ml-auto rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'mr-auto bg-slate-600 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                            }`}
+                        >
+                            <p className="text-base">{message.text}</p>
+                        </div>)
+                    }else if(message.image){
+                        return (<div key={index}><img src={message.image}></img></div>)
+                    }else if(message.forecast){
+                        return (<div key={index}><p>Forecast not implemented yet</p></div>)
+                    }else if(message.weather){
+                        return (<div key={index}><p>Weather not implemented yet</p></div>)
+                    }
+                })}
             </main>
             <footer className="bg-white p-4 flex-shrink-0 font-minecraft">
                 <form onSubmit={handleSubmit} className="flex">
