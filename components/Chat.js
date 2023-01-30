@@ -152,17 +152,17 @@ export default function Chatbot() {
             <header className="bg-white p-4 flex-shrink-0">
                 <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
             </header>
-            <main className="flex-1 overflow-y-scroll overscroll-contain p-4">
+            <main className="flex-1 overflow-y-scroll h-full justify-end overscroll-contain p-4">
                 {messages.map((message, index) => (
                     <div
                         key={index}
-                        className={`bg-white p-2 mb-4 flex-shrink-0 w-min-3/4 w-fit text-black font-minecraft ${
+                        className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft ${
                             message.isUser ? 'ml-auto' : 'mr-auto'
                         } ${
                             message.isUser ? '' : 'bg-slate-600'
                         } ${
-                            message.isUser ? 'rounded-bl-3xl rounded-tl-3xl rounded-tr-xl' : 'rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
-                        }
+                            message.isUser ? 'rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                        } 
                         `}
                     >
                         <p className="text-base">{message.text}</p>
