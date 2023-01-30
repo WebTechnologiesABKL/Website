@@ -150,23 +150,26 @@ export default function Chatbot() {
             <div className="h-full flex items-center justify-center">
             <div className="h-4/5 w-2/3 flex-col flex justify-center  bg-blue-500/75">
             <header className="bg-white p-4 flex-shrink-0">
-                <h1 className="text-xl font-medium text-black">Chatbot</h1>
+                <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
             </header>
-            <main className="flex-1 overflow-y-scroll p-4">
+            <main className="flex-1 overflow-y-scroll h-full justify-end overscroll-contain p-4">
                 {messages.map((message, index) => (
                     <div
                         key={index}
-                        className={`bg-white p-2 rounded-lg mb-4 flex-shrink-0 text-black ${
+                        className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft ${
                             message.isUser ? 'ml-auto' : 'mr-auto'
                         } ${
                             message.isUser ? '' : 'bg-slate-600'
-                        }`}
+                        } ${
+                            message.isUser ? 'rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                        } 
+                        `}
                     >
-                        <p className="text-sm">{message.text}</p>
+                        <p className="text-base">{message.text}</p>
                     </div>
                 ))}
             </main>
-            <footer className="bg-white p-4 flex-shrink-0">
+            <footer className="bg-white p-4 flex-shrink-0 font-minecraft">
                 <form onSubmit={handleSubmit} className="flex">
                     <input
                         type="text"
