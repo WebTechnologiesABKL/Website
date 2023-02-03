@@ -44,4 +44,39 @@ jobs:
         with:
           name: Wetter Chatbot
           path: android/app/build/outputs/apk/debug/Wetter_Chatbot.apk
+
+
+  ios:
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.13 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Create configuration
+        run: |
+          cp .env.local.template .env.local
+          sed -i 's/-_dev-prod_-/prod/g' .env.local
+      - name: Build and push
+        run: |
+          brew install tree
+          npm install
+          npx next build && npx next export
+          sudo gem install cocoapods
+          npx cap add ios
+          tree ios
+          cd ios
+          
+          
+          cd ..
+
+      
         
