@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [ 18.13 ]
-        jdk-version: [17]
+        jdk-version: [11]
 
     steps:
       - name: Checkout
