@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Wetter Chatbot</string>
-    <string name="title_activity_main">Wetter Chatbot</string>
-    <string name="package_name">de.webtechnologiesabkl.wetter</string>
-    <string name="custom_url_scheme">de.webtechnologiesabkl.wetter</string>
-</resources>
