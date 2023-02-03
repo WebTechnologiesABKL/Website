@@ -1,0 +1,47 @@
+name: mobileApp
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.13 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Create configuration
+        run: |
+          cp .env.local.template .env.local
+          sed -i 's/-_dev-prod_-/prod/g' .env.local
+      - name: Build and push
+        run: |
+          npm install
+          npx next build && npx next export
+          npx cap add android
+          cd android
+          ./gradlew assembleDebug
+          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/Wetter_Chatbot.apk
+          
+          cd ..
+
+      - name: Upload APK file
+        uses: actions/upload-artifact@v3
+        with:
+          name: Wetter Chatbot
+          path: android/app/build/outputs/apk/debug/Wetter_Chatbot.apk
+        
