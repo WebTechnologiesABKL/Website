@@ -64,7 +64,7 @@ jobs:
       - name: Create configuration
         run: |
           cp .env.local.template .env.local
-          sed -i 's/-_dev-prod_-/prod/g' .env.local
+          sed -i '' -e 's/-_dev-prod_-/prod/g' .env.local && \
       - name: Build and push
         run: |
           brew install tree
@@ -78,5 +78,3 @@ jobs:
           
           cd ..
 
-      
-        
