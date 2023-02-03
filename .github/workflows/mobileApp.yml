@@ -70,12 +70,15 @@ jobs:
           brew install tree
           npm install
           npx next build && npx next export
+          brew install ios-deploy
+          xcode-select --install
           sudo gem install cocoapods
           npx cap add ios
+          npx cap open ios
           tree ios
           cd ios
           
-          
           cd ..
+
 
 
