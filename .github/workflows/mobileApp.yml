@@ -1,4 +1,4 @@
-name: dockerize
+name: mobileApp
 
 on:
   push:
