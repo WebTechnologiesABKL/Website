@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: false,
   output: 'standalone',
+  images: {
+    unoptimized: true
+  },
   env: {
     SERVER: process.env.SERVER,
     MODE: process.env.MODE
