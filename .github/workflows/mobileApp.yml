@@ -12,7 +12,6 @@ jobs:
     strategy:
       matrix:
         node-version: [ 18.13 ]
-        jdk-version: [ 17 ]
 
     steps:
       - name: Checkout
@@ -34,14 +33,15 @@ jobs:
           npm install
           npx next build && npx next export
           npx cap add android
-          npx cap open android
           cd android
           ./gradlew assembleDebug
+          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/Wetter_Chatbot.apk
+          
           cd ..
 
       - name: Upload APK file
         uses: actions/upload-artifact@v3
         with:
-          name: WetterChatbot.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: Wetter Chatbot
+          path: android/app/build/outputs/apk/debug/Wetter_Chatbot.apk
         
