@@ -1,0 +1,50 @@
+name: dockerize
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.13 ]
+        jdk-version: [11]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: set up JDK
+        uses: actions/setup-java@v2
+        with:
+          jdk-version: ${{ matrix.jdk-version }}
+          distribution: 'temurin'
+          cache: gradle
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Create configuration
+        run: |
+          cp .env.local.template .env.local
+          sed -i 's/-_dev-prod_-/prod/g' .env.local
+      - name: Build and push
+        run: |
+          npm install
+          npx next build && npx next export
+          npx cap add android
+          npx cap open android
+          cd android
+          ./gradlew assembleDebug
+          cd ..
+
+      - name: Upload APK file
+        uses: actions/upload-artifact@v3
+        with:
+          name: WetterChatbot.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+        
