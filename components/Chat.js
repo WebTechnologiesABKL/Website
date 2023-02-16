@@ -211,11 +211,13 @@ export default function Chatbot() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setMessages(currentArray => {return [...currentArray, { text: input, isUser: true, writing: false, image: null, forecast: null, weather: null }]});
-        socket.emit('chat', {
-            'message': input
-        })
-        setInput('');
+        if(!input){
+            setMessages(currentArray => {return [...currentArray, { text: input, isUser: true, writing: false, image: null, forecast: null, weather: null }]});
+            socket.emit('chat', {
+                'message': input
+            })
+            setInput('');
+        }
     };
 
     return (
