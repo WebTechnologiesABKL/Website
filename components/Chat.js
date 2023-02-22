@@ -13,6 +13,58 @@ let videoName = "Clear_day";
 
 const GlobalStyle = 'createGlobalStyle'
 
+function convertDateToString(date){
+    let dateString = "";
+    switch (date.getDay()) {
+        case 0:
+            dateString = "Sonntag, den ";
+            break;
+        case 1:
+            dateString = "Montag, den ";
+            break;
+        case 2:
+            dateString = "Dienstag, den ";
+            break;
+        case 3:
+            dateString = "Mittwoch, den ";
+            break;
+        case 4:
+            dateString = "Donnerstag, den ";
+            break;
+        case 5:
+            dateString = "Freitag, den ";
+            break;
+        case 6:
+            dateString = "Samstag, den ";
+            break;
+    }
+    if(date.getDate() < 10){
+        dateString += "0" + date.getDate();
+    }else{
+        dateString += date.getDate();
+    }
+    if(date.getMonth() < 9){
+        dateString += ".0" + (date.getMonth() + 1);
+    }else{
+        dateString += "." + (date.getMonth() + 1);
+    }
+    dateString += "." + date.getFullYear();
+
+    if(date.getHours() < 10){
+        dateString += " - 0" + date.getHours();
+    }else{
+        dateString += " - " + date.getHours();
+    }
+
+    if(date.getMinutes() < 10){
+        dateString += ":0" + date.getMinutes();
+    }else{
+        dateString += ":" + date.getMinutes();
+    }
+
+    return dateString;
+}
+
 export default function Chatbot() {
     const videoRef = useRef();
     const [input, setInput] = useState('');
@@ -244,9 +296,15 @@ export default function Chatbot() {
                     }else if(message.image){
                         return (<div key={index}><img src={message.image}></img></div>)
                     }else if(message.forecast){
-                        return (<div key={index}><p>Forecast not implemented yet</p></div>)
+                        return message.forecast.map((day, indexDay) => {
+                            return day.weather.weather.map((hour, indexHour) => {
+                                return (<div key={index + ":" + indexDay + ":" + indexHour}><p>Forecast: {convertDateToString(new Date(hour.timestamp))}: {hour.temperature}°C</p></div>)
+                            })
+                        })
                     }else if(message.weather){
-                        return (<div key={index}><p>Weather not implemented yet</p></div>)
+                        return message.weather.weather.weather.map((weather, indexWeather) => {
+                            return (<div key={index + ":" + indexWeather}><p>Current day: {convertDateToString(new Date(weather.timestamp))} : {weather.temperature}°C</p></div>)
+                        })
                     }
                 })}
             </main>
