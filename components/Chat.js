@@ -201,46 +201,56 @@ export default function Chatbot() {
                     let dayNumber = 0
                     let currentDay = new Date(data.forecast[0].weather.weather[0].timestamp)
                     data.forecast.forEach((day, indexDay) => {
-                        day.weather.weather.forEach((hour, index) => {
-                            if(new Date(hour.timestamp).getDay() !== currentDay.getDay()){
-                                forecast[dayNumber][0].average /= forecast[dayNumber][0].values
-                                forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(2)
-                                currentDay = new Date(hour.timestamp)
-                                dayNumber++
-                                forecast.push([null])
-                                forecast[dayNumber][0] = null
-                            }
-                            if(!forecast[dayNumber][0]){
-                                forecast[dayNumber][0] = {
-                                    min: null,
-                                    max: null,
-                                    average: 0.0,
-                                    values: 0,
-                                    day: new Date(hour.timestamp)
+                        //If not 404 (no weather data)
+                        if(!day.weather.title){
+                            day.weather.weather.forEach((hour, index) => {
+                                if(new Date(hour.timestamp).getDay() !== currentDay.getDay()){
+                                    forecast[dayNumber][0].average /= forecast[dayNumber][0].values
+                                    forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(2)
+                                    forecast[dayNumber][0].averageCalculated = true
+                                    currentDay = new Date(hour.timestamp)
+                                    dayNumber++
+                                    forecast.push([null])
+                                    forecast[dayNumber][0] = null
                                 }
-                            }
-                            if(!forecast[dayNumber][0].min || forecast[dayNumber][0].min > hour.temperature){
-                                forecast[dayNumber][0].min = hour.temperature
-                            }
-                            if(!forecast[dayNumber][0].max || forecast[dayNumber][0].max < hour.temperature){
-                                forecast[dayNumber][0].max = hour.temperature
-                            }
-                            forecast[dayNumber][0].average += hour.temperature
-                            forecast[dayNumber][0].values++;
-                            forecast[dayNumber][(index + 1)] = {
-                                timestamp: new Date(hour.timestamp),
-                                temperature: hour.temperature,
-                                icon: hour.icon,
-                                condition: hour.condition,
-                                sunshine: hour.sunshine,
-                                windSpeed: hour.wind_speed,
-                                cloudCover: hour.cloud_cover,
-                                visibility: hour.visibility,
-                                precipitation: hour.precipitation
+                                if(!forecast[dayNumber][0]){
+                                    forecast[dayNumber][0] = {
+                                        min: null,
+                                        max: null,
+                                        average: 0.0,
+                                        averageCalculated: false,
+                                        values: 0,
+                                        day: new Date(hour.timestamp)
+                                    }
+                                }
+                                if(!forecast[dayNumber][0].min || forecast[dayNumber][0].min > hour.temperature){
+                                    forecast[dayNumber][0].min = hour.temperature
+                                }
+                                if(!forecast[dayNumber][0].max || forecast[dayNumber][0].max < hour.temperature){
+                                    forecast[dayNumber][0].max = hour.temperature
+                                }
+                                forecast[dayNumber][0].average += hour.temperature
+                                forecast[dayNumber][0].values++;
+                                forecast[dayNumber][(index + 1)] = {
+                                    timestamp: new Date(hour.timestamp),
+                                    temperature: hour.temperature,
+                                    icon: hour.icon,
+                                    condition: hour.condition,
+                                    sunshine: hour.sunshine,
+                                    windSpeed: hour.wind_speed,
+                                    cloudCover: hour.cloud_cover,
+                                    visibility: hour.visibility,
+                                    precipitation: hour.precipitation
 
-                            }
-                        })
+                                }
+                            })
+                        }
                     })
+                    if(!forecast[dayNumber][0].averageCalculated){
+                        forecast[dayNumber][0].average /= forecast[dayNumber][0].values
+                        forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(2)
+                        forecast[dayNumber][0].averageCalculated = true
+                    }
                     console.log("Forecast Object:")
                     console.log(forecast)
                     setMessages(currentArray => {
@@ -390,9 +400,9 @@ export default function Chatbot() {
                     }else if(message.image){
                         return (<div key={index}><img src={message.image}></img></div>)
                     }else if(message.forecast){
-                        return (<div key={index}>{message.forecast.map((day, indexDay) => {
-                            return (<div key={index + ":" + indexDay}><p>Forecast: {convertDateToString(new Date(day[0].day), 1, 0)}: Min: {day[0].min}°C | Max: {day[0].max}°C | Average: {day[0].average}°C</p></div>)
-                        })}</div>)
+                        return (<div key={index}><table><caption>Wetter vorschau</caption><thead><tr><th>Datum</th><th>Min</th><th>Max</th><th>Durchschnitt</th></tr></thead><tbody>{message.forecast.map((day, indexDay) => {
+                            return (<tr key={index + ':' + indexDay}><td>{convertDateToString(new Date(day[0].day), 1, 0)}&nbsp;&nbsp;</td><td>{day[0].min}°C&nbsp;&nbsp;</td><td>{day[0].max}°C&nbsp;&nbsp;</td><td>{day[0].average}°C&nbsp;&nbsp;</td></tr>)
+                        })}</tbody></table></div>)
                     }else if(message.weather){
                         return (<div key={index}><p>Current day: {convertDateToString(new Date(message.weather[0].day), 1, 1)} : {message.weather[0].temperature}°C || Min: {message.weather[0].min}°C | Max: {message.weather[0].max}°C | Average: {message.weather[0].average}°C</p></div>)
                     }
