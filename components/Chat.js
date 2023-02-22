@@ -9,57 +9,60 @@ import io from 'socket.io-client'
 
 let socket
 
-let videoName = "Clear_day";
 
 const GlobalStyle = 'createGlobalStyle'
 
-function convertDateToString(date){
+function convertDateToString(dateObject, date, time){
     let dateString = "";
-    switch (date.getDay()) {
-        case 0:
-            dateString = "Sonntag, den ";
-            break;
-        case 1:
-            dateString = "Montag, den ";
-            break;
-        case 2:
-            dateString = "Dienstag, den ";
-            break;
-        case 3:
-            dateString = "Mittwoch, den ";
-            break;
-        case 4:
-            dateString = "Donnerstag, den ";
-            break;
-        case 5:
-            dateString = "Freitag, den ";
-            break;
-        case 6:
-            dateString = "Samstag, den ";
-            break;
-    }
-    if(date.getDate() < 10){
-        dateString += "0" + date.getDate();
-    }else{
-        dateString += date.getDate();
-    }
-    if(date.getMonth() < 9){
-        dateString += ".0" + (date.getMonth() + 1);
-    }else{
-        dateString += "." + (date.getMonth() + 1);
-    }
-    dateString += "." + date.getFullYear();
-
-    if(date.getHours() < 10){
-        dateString += " - 0" + date.getHours();
-    }else{
-        dateString += " - " + date.getHours();
+    if(date){
+        switch (dateObject.getDay()) {
+            case 0:
+                dateString = "Sonntag, den ";
+                break;
+            case 1:
+                dateString = "Montag, den ";
+                break;
+            case 2:
+                dateString = "Dienstag, den ";
+                break;
+            case 3:
+                dateString = "Mittwoch, den ";
+                break;
+            case 4:
+                dateString = "Donnerstag, den ";
+                break;
+            case 5:
+                dateString = "Freitag, den ";
+                break;
+            case 6:
+                dateString = "Samstag, den ";
+                break;
+        }
+        if(dateObject.getDate() < 10){
+            dateString += "0" + dateObject.getDate();
+        }else{
+            dateString += dateObject.getDate();
+        }
+        if(dateObject.getMonth() < 9){
+            dateString += ".0" + (dateObject.getMonth() + 1);
+        }else{
+            dateString += "." + (dateObject.getMonth() + 1);
+        }
+        dateString += "." + dateObject.getFullYear();
     }
 
-    if(date.getMinutes() < 10){
-        dateString += ":0" + date.getMinutes();
-    }else{
-        dateString += ":" + date.getMinutes();
+    if(time){
+        if(dateObject.getHours() < 10){
+            dateString += " - 0" + dateObject.getHours();
+        }else{
+            dateString += " - " + dateObject.getHours();
+        }
+
+        if(dateObject.getMinutes() < 10){
+            dateString += ":0" + dateObject.getMinutes();
+        }else{
+            dateString += ":" + dateObject.getMinutes();
+        }
     }
 
     return dateString;
@@ -69,6 +72,7 @@ export default function Chatbot() {
     const videoRef = useRef();
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
+    const [videoName, setVideoName] = useState('Clear_day')
 
     useEffect(() => {
         socketInitializer(), []
@@ -84,7 +88,10 @@ export default function Chatbot() {
             socket = io('ws://' + process.env.SERVER + ':8085')
 
             socket.on('connect', () => {
-                console.log('connected')
+                console.log('Connected')
+            })
+            socket.on('disconnect', () => {
+                console.log('Disconnected')
             })
             socket.on("welcome", function (data) {
                 let message = data.message
@@ -116,7 +123,48 @@ export default function Chatbot() {
                     let weather = data.weather
                     let time = new Date(data.time)
                     changeVideo(weather, time)
-                    console.log(weather)
+                    let weatherObject = [null]
+                    let currentDay = new Date(weather.weather.weather[0].timestamp)
+                        weather.weather.weather.every((hour, index) => {
+                            if(new Date(hour.timestamp).getDay() !== currentDay.getDay() || (index + 1) == weather.weather.weather.length){
+                                weatherObject[0].average /= weatherObject[0].values
+                                weatherObject[0].average = weatherObject[0].average.toFixed(2)
+                                currentDay = new Date(hour.timestamp)
+                                return false;
+                            }
+                            if(!weatherObject[0]){
+                                weatherObject[0] = {
+                                    min: null,
+                                    max: null,
+                                    average: 0.0,
+                                    values: 0,
+                                    day: new Date(hour.timestamp)
+                                }
+                            }
+                            if(!weatherObject[0].min || weatherObject[0].min > hour.temperature){
+                                weatherObject[0].min = hour.temperature
+                            }
+                            if(!weatherObject[0].max || weatherObject[0].max < hour.temperature){
+                                weatherObject[0].max = hour.temperature
+                            }
+                            weatherObject[0].average += hour.temperature
+                            weatherObject[0].values++;
+                            weatherObject[(index + 1)] = {
+                                timestamp: new Date(hour.timestamp),
+                                temperature: hour.temperature,
+                                icon: hour.icon,
+                                condition: hour.condition,
+                                sunshine: hour.sunshine,
+                                windSpeed: hour.wind_speed,
+                                cloudCover: hour.cloud_cover,
+                                visibility: hour.visibility,
+                                precipitation: hour.precipitation
+
+                            }
+                            return true;
+                        })
+                    console.log("WeatherObject:")
+                    console.log(weatherObject)
                     setMessages(currentArray => {
                         return [...currentArray, {
                             text: null,
@@ -124,7 +172,7 @@ export default function Chatbot() {
                             writing: false,
                             image: null,
                             forecast: null,
-                            weather: weather
+                            weather: weatherObject
                         }]
                     });
                 }
@@ -148,14 +196,60 @@ export default function Chatbot() {
 
             socket.on("forecast", function (data) {
                 if (data.forecast) {
-                    console.log(data.forecast)
+                    let forecast = []
+                    forecast.push([null])
+                    let dayNumber = 0
+                    let currentDay = new Date(data.forecast[0].weather.weather[0].timestamp)
+                    data.forecast.forEach((day, indexDay) => {
+                        day.weather.weather.forEach((hour, index) => {
+                            if(new Date(hour.timestamp).getDay() !== currentDay.getDay()){
+                                forecast[dayNumber][0].average /= forecast[dayNumber][0].values
+                                forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(2)
+                                currentDay = new Date(hour.timestamp)
+                                dayNumber++
+                                forecast.push([null])
+                                forecast[dayNumber][0] = null
+                            }
+                            if(!forecast[dayNumber][0]){
+                                forecast[dayNumber][0] = {
+                                    min: null,
+                                    max: null,
+                                    average: 0.0,
+                                    values: 0,
+                                    day: new Date(hour.timestamp)
+                                }
+                            }
+                            if(!forecast[dayNumber][0].min || forecast[dayNumber][0].min > hour.temperature){
+                                forecast[dayNumber][0].min = hour.temperature
+                            }
+                            if(!forecast[dayNumber][0].max || forecast[dayNumber][0].max < hour.temperature){
+                                forecast[dayNumber][0].max = hour.temperature
+                            }
+                            forecast[dayNumber][0].average += hour.temperature
+                            forecast[dayNumber][0].values++;
+                            forecast[dayNumber][(index + 1)] = {
+                                timestamp: new Date(hour.timestamp),
+                                temperature: hour.temperature,
+                                icon: hour.icon,
+                                condition: hour.condition,
+                                sunshine: hour.sunshine,
+                                windSpeed: hour.wind_speed,
+                                cloudCover: hour.cloud_cover,
+                                visibility: hour.visibility,
+                                precipitation: hour.precipitation
+
+                            }
+                        })
+                    })
+                    console.log("Forecast Object:")
+                    console.log(forecast)
                     setMessages(currentArray => {
                         return [...currentArray, {
                             text: null,
                             isUser: false,
                             writing: false,
                             image: null,
-                            forecast: data.forecast,
+                            forecast: forecast,
                             weather: null
                         }]
                     });
@@ -188,72 +282,72 @@ export default function Chatbot() {
             }
             switch(icon){
                 case "clear-day":
-                    videoName = "Clear_day"
+                    setVideoName("Clear_day")
                     break;
                 case "partly-cloudy-day":
-                    videoName = "Clear_day"
+                    setVideoName("Clear_day")
                     break;
                 case "partly-cloudy-night":
-                    videoName = "Clear_night"
+                    setVideoName("Clear_night")
                     break;
                 case "clear-night":
-                    videoName = "Clear_night"
+                    setVideoName("Clear_night")
                     break;
 
                 case "cloudy":
                     if(isDay){
-                        videoName = "Clear_day"
+                        setVideoName("Clear_day")
                     }else{
-                        videoName = "Clear_night"
+                        setVideoName("Clear_night")
                     }
                     break;
                 case "sunny":
                     if(isDay){
-                        videoName = "Clear_day"
+                        setVideoName("Clear_day")
                     }else{
-                        videoName = "Clear_night"
+                        setVideoName("Clear_night")
                     }
                     break;
                 case "wind":
                     if(isDay){
-                        videoName = "Clear_day"
+                        setVideoName("Clear_day")
                     }else{
-                        videoName = "Clear_night"
+                        setVideoName("Clear_night")
                     }
                     break;
                 case "fog":
                     if(isDay){
-                        videoName = "Rain_day"
+                        setVideoName("Rain_day")
                     }else{
-                        videoName = "Rain_night"
+                        setVideoName("Rain_night")
                     }
                     break;
                 case "rain":
                     if(isDay){
-                        videoName = "Rain_day"
+                        setVideoName("Rain_day")
                     }else{
-                        videoName = "Rain_night"
+                        setVideoName("Rain_night")
                     }
                     break;
                 case "snow":
                     if(isDay){
-                        videoName = "Snow_day"
+                        setVideoName("Snow_day")
                     }else{
-                        videoName = "Snow_night"
+                        setVideoName("Snow_night")
                     }
                     break;
                 case "sleet":
                     if(isDay){
-                        videoName = "Snow_day"
+                        setVideoName("Snow_day")
                     }else{
-                        videoName = "Snow_night"
+                        setVideoName("Snow_night")
                     }
                     break;
                 case "thunderstorm":
                     if(isDay){
-                        videoName = "Thunder_day"
+                        setVideoName("Thunder_day")
                     }else{
-                        videoName = "Thunder_night"
+                        setVideoName("Thunder_night")
                     }
                     break;
             }
@@ -296,15 +390,11 @@ export default function Chatbot() {
                     }else if(message.image){
                         return (<div key={index}><img src={message.image}></img></div>)
                     }else if(message.forecast){
-                        return message.forecast.map((day, indexDay) => {
-                            return day.weather.weather.map((hour, indexHour) => {
-                                return (<div key={index + ":" + indexDay + ":" + indexHour}><p>Forecast: {convertDateToString(new Date(hour.timestamp))}: {hour.temperature}°C</p></div>)
-                            })
-                        })
+                        return (<div key={index}>{message.forecast.map((day, indexDay) => {
+                            return (<div key={index + ":" + indexDay}><p>Forecast: {convertDateToString(new Date(day[0].day), 1, 0)}: Min: {day[0].min}°C | Max: {day[0].max}°C | Average: {day[0].average}°C</p></div>)
+                        })}</div>)
                     }else if(message.weather){
-                        return message.weather.weather.weather.map((weather, indexWeather) => {
-                            return (<div key={index + ":" + indexWeather}><p>Current day: {convertDateToString(new Date(weather.timestamp))} : {weather.temperature}°C</p></div>)
-                        })
+                        return (<div key={index}><p>Current day: {convertDateToString(new Date(message.weather[0].day), 1, 1)} : {message.weather[0].temperature}°C || Min: {message.weather[0].min}°C | Max: {message.weather[0].max}°C | Average: {message.weather[0].average}°C</p></div>)
                     }
                 })}
             </main>
