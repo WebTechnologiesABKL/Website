@@ -68,6 +68,11 @@ function convertDateToString(dateObject, date, time){
     return dateString;
 }
 
+function scrollToBottom(){
+    let box = document.getElementById('box');
+    box.scrollTop = box.scrollHeight;
+}
+
 export default function Chatbot() {
     const videoRef = useRef();
     const [input, setInput] = useState('');
@@ -105,6 +110,7 @@ export default function Chatbot() {
                         weather: null
                     }]
                 });
+                scrollToBottom();
             })
 
             socket.on("chat", function (data) {
@@ -176,6 +182,7 @@ export default function Chatbot() {
                         }]
                     });
                 }
+                scrollToBottom()
             })
 
             socket.on("image", function (data) {
@@ -191,6 +198,7 @@ export default function Chatbot() {
                             weather: null
                         }]
                     });
+                    scrollToBottom();
                 }
             })
 
@@ -263,6 +271,10 @@ export default function Chatbot() {
                             weather: null
                         }]
                     });
+                    scrollToBottom();
+                    setTimeout(() => {
+                       scrollToBottom();
+                    }, 100)
                 }
             })
 
@@ -281,6 +293,7 @@ export default function Chatbot() {
                 } else {
                     setMessages((currentArray) => currentArray.filter((item) => !item.writing));
                 }
+                scrollToBottom();
             })
         }
 
@@ -369,6 +382,7 @@ export default function Chatbot() {
         e.preventDefault();
         if(input){
             setMessages(currentArray => {return [...currentArray, { text: input, isUser: true, writing: false, image: null, forecast: null, weather: null }]});
+            scrollToBottom();
             socket.emit('chat', {
                 'message': input
             })
@@ -386,7 +400,7 @@ export default function Chatbot() {
             <header className="bg-white p-4 flex-shrink-0">
                 <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
             </header>
-            <main className="flex-1 overflow-y-scroll h-full justify-end overscroll-contain p-4">
+            <main id="box" className="flex-1 overflow-y-scroll h-full justify-end overscroll-contain p-4">
                 {messages.map((message, index) => {
                     if(message.text){
                         return (<div
