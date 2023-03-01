@@ -134,7 +134,7 @@ export default function Chatbot() {
                         weather.weather.weather.every((hour, index) => {
                             if(new Date(hour.timestamp).getDay() !== currentDay.getDay() || (index + 1) == weather.weather.weather.length){
                                 weatherObject[0].average /= weatherObject[0].values
-                                weatherObject[0].average = weatherObject[0].average.toFixed(2)
+                                weatherObject[0].average = weatherObject[0].average.toFixed(1)
                                 currentDay = new Date(hour.timestamp)
                                 return false;
                             }
@@ -144,7 +144,9 @@ export default function Chatbot() {
                                     max: null,
                                     average: 0.0,
                                     values: 0,
-                                    day: new Date(hour.timestamp)
+                                    day: new Date(hour.timestamp),
+                                    city: data.city,
+                                    country: data.country
                                 }
                             }
                             if(!weatherObject[0].min || weatherObject[0].min > hour.temperature){
@@ -164,8 +166,9 @@ export default function Chatbot() {
                                 windSpeed: hour.wind_speed,
                                 cloudCover: hour.cloud_cover,
                                 visibility: hour.visibility,
-                                precipitation: hour.precipitation
-
+                                precipitation: hour.precipitation,
+                                city: data.city,
+                                country: data.country
                             }
                             return true;
                         })
@@ -214,7 +217,7 @@ export default function Chatbot() {
                             day.weather.weather.forEach((hour, index) => {
                                 if(new Date(hour.timestamp).getDay() !== currentDay.getDay()){
                                     forecast[dayNumber][0].average /= forecast[dayNumber][0].values
-                                    forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(2)
+                                    forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(1)
                                     forecast[dayNumber][0].averageCalculated = true
                                     currentDay = new Date(hour.timestamp)
                                     dayNumber++
@@ -228,7 +231,9 @@ export default function Chatbot() {
                                         average: 0.0,
                                         averageCalculated: false,
                                         values: 0,
-                                        day: new Date(hour.timestamp)
+                                        day: new Date(hour.timestamp),
+                                        city: data.city,
+                                        country: data.country
                                     }
                                 }
                                 if(!forecast[dayNumber][0].min || forecast[dayNumber][0].min > hour.temperature){
@@ -248,8 +253,9 @@ export default function Chatbot() {
                                     windSpeed: hour.wind_speed,
                                     cloudCover: hour.cloud_cover,
                                     visibility: hour.visibility,
-                                    precipitation: hour.precipitation
-
+                                    precipitation: hour.precipitation,
+                                    city: data.city,
+                                    country: data.country
                                 }
                             })
                         }
