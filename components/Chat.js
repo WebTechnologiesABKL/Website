@@ -504,9 +504,6 @@ export default function Chatbot() {
                                 })}
                             </div>
                         )
-                        //return (<div key={index}><table><caption>Wetter vorschau</caption><thead><tr><th>Datum</th><th>Min</th><th>Max</th><th>Durchschnitt</th></tr></thead><tbody>{message.forecast.map((day, indexDay) => {
-                        //return (<tr key={index + ':' + indexDay}><td>{convertDateToString(new Date(day[0].day), 1, 0)}&nbsp;&nbsp;</td><td>{day[0].min}°C&nbsp;&nbsp;</td><td>{day[0].max}°C&nbsp;&nbsp;</td><td>{day[0].average}°C&nbsp;&nbsp;</td></tr>)
-                        //})}</tbody></table></div>)
                     }else if(message.weather){
                         return(
                             <div key="weather first day" className="w-2/3 max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
@@ -583,74 +580,6 @@ export default function Chatbot() {
 
                             </div>
                         )
-
-                        /*return (
-                            <div key="Weather"
-                                className="w-2/3 max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40">
-                                <div className="flex justify-between">
-                                    <div className="flex flex-col">
-                                        <span className="text-6xl font-bold" key={index}>{message.weather[0].average}°C</span>
-                                        <span className="font-semibold mt-1 text-gray-500" key={index}>{message.weather[0].city}, {message.weather[0].country}</span>
-                                    </div>
-                                    <img
-                                        src="/icon_partlyCloudy.png"
-                                        className="h-24 w-24 "
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                </div>
-                                <div className="flex justify-between mt-12">
-
-                                    <div className="flex flex-col items-center">
-                                        <span className="font-semibold text-lg" key={index}>{message.weather[12].temperature}°C</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/icon_partlyCloudy.png"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                        <span className="font-semibold mt-1 text-sm">11:00</span>
-                                        <span className="text-xs font-semibold text-gray-400">AM</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="font-semibold text-lg" key={index}>{message.weather[14].temperature}°C</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/icon_partlyCloudy.png"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                        <span className="font-semibold mt-1 text-sm">1:00</span>
-                                        <span className="text-xs font-semibold text-gray-400">PM</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="font-semibold text-lg" key={index}>{message.weather[16].temperature}°C</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/icon_partlyCloudy.png"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                        <span className="font-semibold mt-1 text-sm">3:00</span>
-                                        <span className="text-xs font-semibold text-gray-400">PM</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="font-semibold text-lg" key={index}>{message.weather[16].temperature}°C</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/icon_partlyCloudy.png"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                        <span className="font-semibold mt-1 text-sm">5:00</span>
-                                        <span className="text-xs font-semibold text-gray-400">PM</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="font-semibold text-lg" key={index}>{message.weather[16].temperature}°C</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/icon_partlyCloudy.png"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                        <span className="font-semibold mt-1 text-sm">7:00</span>
-                                        <span className="text-xs font-semibold text-gray-400">PM</span>
-                                    </div>
-                                </div>
-                            </div>
-                            // <div key={index}>
-                            //     <p>Current day: {convertDateToString(new Date(message.weather[0].day), 1, 1)} : {message.weather[0].temperature}°C || Min: {message.weather[0].min}°C | Max: {message.weather[0].max}°C | Average: {message.weather[0].average}°C</p>
-                            // </div>
-                        )*/
                     }
                 })}
             </main>
