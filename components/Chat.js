@@ -531,6 +531,14 @@ export default function Chatbot() {
                                                 <span className="font-semibold mt-1 text-gray-500"
                                                       key={index}>{message.weather[0].city}, {message.weather[0].country}</span>
                                             </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-4xl font-bold">{message.weather[0].maxRain * 100}%</span>
+                                                <img className="h-20 w-20 fill-current text-gray-400 mt-3"
+                                                     src="/icon_rainDrop.png"
+                                                     height="24" viewBox="0 0 24 24" width="24">
+                                                </img>
+                                            </div>
+
                                             <img
                                                 src={"/" + getIconImage(message.weather[0].icon) + '.png'}
                                                 className="h-24 w-24 "
