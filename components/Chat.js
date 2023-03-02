@@ -463,7 +463,7 @@ export default function Chatbot() {
                 <source src={"/" + videoName + ".mp4"} type="video/mp4"/>
             </video>
             <div className="h-full flex items-center justify-center">
-            <div className="h-4/5 w-2/3 flex-col flex justify-center  bg-blue-500/75">
+            <div className="h-4/5 w-2/3 flex-col flex justify-center  bg-blue-500/50">
             <header className="bg-white p-4 flex-shrink-0">
                 <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
             </header>
@@ -473,7 +473,7 @@ export default function Chatbot() {
                         return (<div
                             key={index}
                             className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft  ${
-                                message.isUser ? 'ml-auto rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'mr-auto bg-slate-600 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                                message.isUser ? 'ml-auto rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'mr-auto bg-slate-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
                             }`}
                         >
                             <p className="text-base">{message.text}</p>
@@ -482,11 +482,11 @@ export default function Chatbot() {
                         return (<div key={index}><img src={message.image}></img></div>)
                     }else if(message.forecast){
                         return(
-                            <div key="forecast" className="flex flex-col space-y-6 w-2/3 max-w-screen-sm bg-white p-10 mt-10 rounded-xl ring-8 ring-white ring-opacity-40">
+                            <div key="forecast" className="flex flex-col space-y-6 w-2/3 max-w-screen-sm bg-white p-10 mt-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
                                 {message.forecast.map((day, indexDay) => {
                                     if(indexDay != 0){
                                         return(<div key={index + ':' + indexDay} className="flex justify-between items-center">
-                                            <span className="font-semibold text-lg w-1/4">{convertDateToString(new Date(day[0].day), true, false)}</span>
+                                            <span className="font-black text-sm w-1/4">{convertDateToString(new Date(day[0].day), true, false)}</span>
                                             <div className="flex items-center justify-end w-1/4 pr-10">
                                                 <span className="font-semibold">{day[0].maxRain * 100}%</span>
                                                 <img className="h-10 w-10 fill-current text-gray-400 mt-3"
