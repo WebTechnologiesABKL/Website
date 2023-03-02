@@ -486,7 +486,7 @@ export default function Chatbot() {
                                 {message.forecast.map((day, indexDay) => {
                                     if(indexDay != 0){
                                         return(<div key={index + ':' + indexDay} className="flex justify-between items-center">
-                                            <span className="font-semibold text-lg w-1/4">{convertDateToString(new Date(day[0].day, true, false))}</span>
+                                            <span className="font-semibold text-lg w-1/4">{convertDateToString(new Date(day[0].day), true, false)}</span>
                                             <div className="flex items-center justify-end w-1/4 pr-10">
                                                 <span className="font-semibold">{day[0].maxRain * 100}%</span>
                                                 <img className="h-10 w-10 fill-current text-gray-400 mt-3"
