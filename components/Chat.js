@@ -73,6 +73,51 @@ function scrollToBottom(){
     box.scrollTop = box.scrollHeight;
 }
 
+function getIconImage(icon){
+    let iconImage = 'cloudy';
+
+    switch (icon) {
+        case "clear-day":
+            iconImage = "icon_sunny";
+            break;
+        case "partly-cloudy-day":
+            iconImage = "icon_partlyCloudy";
+            break;
+        case "partly-cloudy-night":
+            iconImage = "icon_partlyCloudy";
+            break;
+        case "clear-night":
+            iconImage = "icon_sunny";
+            break;
+        case "cloudy":
+            iconImage = "icon_cloudy";
+            break;
+        case "sunny":
+            iconImage = "icon_sunny";
+            break;
+        case "wind":
+            iconImage = "icon_windy";
+            break;
+        case "fog":
+            iconImage = "icon_foggy";
+            break;
+        case "rain":
+            iconImage = "icon_rainy";
+            break;
+        case "snow":
+            iconImage = "icon_snow";
+            break;
+        case "sleet":
+            iconImage = "icon_sleet";
+            break;
+        case "thunderstorm":
+            iconImage = "icon_thunderstorm";
+            break;
+    }
+
+    return iconImage
+}
+
 export default function Chatbot() {
     const videoRef = useRef();
     const [input, setInput] = useState('');
@@ -142,11 +187,13 @@ export default function Chatbot() {
                                 weatherObject[0] = {
                                     min: null,
                                     max: null,
+                                    maxRain: null,
                                     average: 0.0,
                                     values: 0,
                                     day: new Date(hour.timestamp),
                                     city: data.city,
-                                    country: data.country
+                                    country: data.country,
+                                    icon: null
                                 }
                             }
                             if(!weatherObject[0].min || weatherObject[0].min > hour.temperature){
@@ -154,6 +201,12 @@ export default function Chatbot() {
                             }
                             if(!weatherObject[0].max || weatherObject[0].max < hour.temperature){
                                 weatherObject[0].max = hour.temperature
+                            }
+                            if(!weatherObject[0].maxRain || weatherObject[0].maxRain < hour.precipitation){
+                                weatherObject[0].maxRain = hour.precipitation
+                            }
+                            if(!weatherObject[0].icon || new Date(weatherObject[0].timestamp).getHours() == 12){
+                                weatherObject[0].icon = hour.icon
                             }
                             weatherObject[0].average += hour.temperature
                             weatherObject[0].values++;
@@ -228,12 +281,14 @@ export default function Chatbot() {
                                     forecast[dayNumber][0] = {
                                         min: null,
                                         max: null,
+                                        maxRain: null,
                                         average: 0.0,
                                         averageCalculated: false,
                                         values: 0,
                                         day: new Date(hour.timestamp),
                                         city: data.city,
-                                        country: data.country
+                                        country: data.country,
+                                        icon: null
                                     }
                                 }
                                 if(!forecast[dayNumber][0].min || forecast[dayNumber][0].min > hour.temperature){
@@ -241,6 +296,12 @@ export default function Chatbot() {
                                 }
                                 if(!forecast[dayNumber][0].max || forecast[dayNumber][0].max < hour.temperature){
                                     forecast[dayNumber][0].max = hour.temperature
+                                }
+                                if(!forecast[dayNumber][0].maxRain || forecast[dayNumber][0].maxRain < hour.precipitation){
+                                    forecast[dayNumber][0].maxRain = hour.precipitation
+                                }
+                                if(!forecast[dayNumber][0].icon || new Date(forecast[dayNumber][0].timestamp).getHours() == 12){
+                                    forecast[dayNumber][0].icon = hour.icon
                                 }
                                 forecast[dayNumber][0].average += hour.temperature
                                 forecast[dayNumber][0].values++;
@@ -422,103 +483,32 @@ export default function Chatbot() {
                     }else if(message.forecast){
                         return(
                             <div key="forecast" className="flex flex-col space-y-6 w-2/3 max-w-screen-sm bg-white p-10 mt-10 rounded-xl ring-8 ring-white ring-opacity-40">
-                                <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-lg w-1/4">Fri, 22 Jan</span>
-                                    <div className="flex items-center justify-end w-1/4 pr-10">
-                                        <span className="font-semibold">12%</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/rainDrop.jpg"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                    </div>
-                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                         src="/cloudWithSun.png"
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                    <span className="font-semibold text-lg w-1/4 text-right">18° / 32°</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-lg w-1/4">Fri, 22 Jan</span>
-                                    <div className="flex items-center justify-end w-1/4 pr-10">
-                                        <span className="font-semibold">12%</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/rainDrop.jpg"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                    </div>
-                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                         src="/cloudWithSun.png"
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                    <span className="font-semibold text-lg w-1/4 text-right">18° / 32°</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-lg w-1/4">Fri, 22 Jan</span>
-                                    <div className="flex items-center justify-end w-1/4 pr-10">
-                                        <span className="font-semibold">12%</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/rainDrop.jpg"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                    </div>
-                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                         src="/cloudWithSun.png"
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                    <span className="font-semibold text-lg w-1/4 text-right">18° / 32°</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-lg w-1/4">Fri, 22 Jan</span>
-                                    <div className="flex items-center justify-end w-1/4 pr-10">
-                                        <span className="font-semibold">12%</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/rainDrop.jpg"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                    </div>
-                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                         src="/cloudWithSun.png"
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                    <span className="font-semibold text-lg w-1/4 text-right">18° / 32°</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-lg w-1/4">Fri, 22 Jan</span>
-                                    <div className="flex items-center justify-end w-1/4 pr-10">
-                                        <span className="font-semibold">12%</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/rainDrop.jpg"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                    </div>
-                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                         src="/cloudWithSun.png"
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                    <span className="font-semibold text-lg w-1/4 text-right">18° / 32°</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-lg w-1/4">Fri, 22 Jan</span>
-                                    <div className="flex items-center justify-end w-1/4 pr-10">
-                                        <span className="font-semibold">12%</span>
-                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/rainDrop.jpg"
-                                             height="24" viewBox="0 0 24 24" width="24">
-                                        </img>
-                                    </div>
-                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                         src="/cloudWithSun.png"
-                                         height="24" viewBox="0 0 24 24" width="24">
-                                    </img>
-                                    <span className="font-semibold text-lg w-1/4 text-right">18° / 32°</span>
-                                </div>
+                                {message.forecast.map((day, indexDay) => {
+                                    if(indexDay != 0){
+                                        return(<div key={index + ':' + indexDay} className="flex justify-between items-center">
+                                            <span className="font-semibold text-lg w-1/4">{convertDateToString(new Date(day[0].day, true, false))}</span>
+                                            <div className="flex items-center justify-end w-1/4 pr-10">
+                                                <span className="font-semibold">{day[0].maxRain * 100}%</span>
+                                                <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                     src="/icon_rainDrop.png"
+                                                     height="24" viewBox="0 0 24 24" width="24">
+                                                </img>
+                                            </div>
+                                            <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                 src={"/" + getIconImage(day[0].icon) + '.png'}
+                                                 height="24" viewBox="0 0 24 24" width="24">
+                                            </img>
+                                            <span className="font-semibold text-lg w-1/4 text-right">{day[0].min}°C / {day[0].max}°C</span>
+                                        </div>)
+                                    }
+                                })}
                             </div>
                         )
                         //return (<div key={index}><table><caption>Wetter vorschau</caption><thead><tr><th>Datum</th><th>Min</th><th>Max</th><th>Durchschnitt</th></tr></thead><tbody>{message.forecast.map((day, indexDay) => {
                         //return (<tr key={index + ':' + indexDay}><td>{convertDateToString(new Date(day[0].day), 1, 0)}&nbsp;&nbsp;</td><td>{day[0].min}°C&nbsp;&nbsp;</td><td>{day[0].max}°C&nbsp;&nbsp;</td><td>{day[0].average}°C&nbsp;&nbsp;</td></tr>)
                         //})}</tbody></table></div>)
                     }else if(message.weather){
-                        return (
+                        /*return (
                             <div key="Weather"
                                 className="w-2/3 max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40">
                                 <div className="flex justify-between">
@@ -527,7 +517,7 @@ export default function Chatbot() {
                                         <span className="font-semibold mt-1 text-gray-500" key={index}>{message.weather[0].city}, {message.weather[0].country}</span>
                                     </div>
                                     <img
-                                        src="/cloudWithSun.png"
+                                        src="/icon_partlyCloudy.png"
                                         className="h-24 w-24 "
                                          height="24" viewBox="0 0 24 24" width="24">
                                     </img>
@@ -537,7 +527,7 @@ export default function Chatbot() {
                                     <div className="flex flex-col items-center">
                                         <span className="font-semibold text-lg" key={index}>{message.weather[12].temperature}°C</span>
                                         <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/cloudWithSun.png"
+                                             src="/icon_partlyCloudy.png"
                                              height="24" viewBox="0 0 24 24" width="24">
                                         </img>
                                         <span className="font-semibold mt-1 text-sm">11:00</span>
@@ -546,7 +536,7 @@ export default function Chatbot() {
                                     <div className="flex flex-col items-center">
                                         <span className="font-semibold text-lg" key={index}>{message.weather[14].temperature}°C</span>
                                         <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/cloudWithSun.png"
+                                             src="/icon_partlyCloudy.png"
                                              height="24" viewBox="0 0 24 24" width="24">
                                         </img>
                                         <span className="font-semibold mt-1 text-sm">1:00</span>
@@ -555,7 +545,7 @@ export default function Chatbot() {
                                     <div className="flex flex-col items-center">
                                         <span className="font-semibold text-lg" key={index}>{message.weather[16].temperature}°C</span>
                                         <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/cloudWithSun.png"
+                                             src="/icon_partlyCloudy.png"
                                              height="24" viewBox="0 0 24 24" width="24">
                                         </img>
                                         <span className="font-semibold mt-1 text-sm">3:00</span>
@@ -564,7 +554,7 @@ export default function Chatbot() {
                                     <div className="flex flex-col items-center">
                                         <span className="font-semibold text-lg" key={index}>{message.weather[16].temperature}°C</span>
                                         <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/cloudWithSun.png"
+                                             src="/icon_partlyCloudy.png"
                                              height="24" viewBox="0 0 24 24" width="24">
                                         </img>
                                         <span className="font-semibold mt-1 text-sm">5:00</span>
@@ -573,7 +563,7 @@ export default function Chatbot() {
                                     <div className="flex flex-col items-center">
                                         <span className="font-semibold text-lg" key={index}>{message.weather[16].temperature}°C</span>
                                         <img className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                             src="/cloudWithSun.png"
+                                             src="/icon_partlyCloudy.png"
                                              height="24" viewBox="0 0 24 24" width="24">
                                         </img>
                                         <span className="font-semibold mt-1 text-sm">7:00</span>
@@ -584,7 +574,7 @@ export default function Chatbot() {
                             // <div key={index}>
                             //     <p>Current day: {convertDateToString(new Date(message.weather[0].day), 1, 1)} : {message.weather[0].temperature}°C || Min: {message.weather[0].min}°C | Max: {message.weather[0].max}°C | Average: {message.weather[0].average}°C</p>
                             // </div>
-                        )
+                        )*/
                     }
                 })}
             </main>
