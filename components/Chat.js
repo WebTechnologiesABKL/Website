@@ -508,6 +508,82 @@ export default function Chatbot() {
                         //return (<tr key={index + ':' + indexDay}><td>{convertDateToString(new Date(day[0].day), 1, 0)}&nbsp;&nbsp;</td><td>{day[0].min}°C&nbsp;&nbsp;</td><td>{day[0].max}°C&nbsp;&nbsp;</td><td>{day[0].average}°C&nbsp;&nbsp;</td></tr>)
                         //})}</tbody></table></div>)
                     }else if(message.weather){
+                        return(
+                            <div key="weather first day" className="w-2/3 max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
+                                <div className="flex justify-between">
+                                    <div className="flex flex-col">
+                                        <span className="text-6xl font-bold" key={index}>{message.weather[0].average}°C</span>
+                                        <span className="font-semibold mt-1 text-gray-500" key={index}>{message.weather[0].city}, {message.weather[0].country}</span>
+                                    </div>
+                                    <img
+                                        src={"/" + getIconImage(message.weather[0].icon) + '.png'}
+                                        className="h-24 w-24 "
+                                        height="24" viewBox="0 0 24 24" width="24">
+                                    </img>
+                                </div>
+
+                                <div className="flex justify-between mt-12">
+
+                                    {message.weather.map((hour, indexHour) => {
+                                        if (indexHour != 0){
+                                            console.log(hour);
+                                        if (new Date(hour.timestamp).getHours() == 11){
+                                            return (
+                                                <div key={index+":"+indexHour} className="flex flex-col items-center">
+                                                    <span className="font-semibold text-lg" key={index}>{hour.temperature}°C</span>
+                                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                         src={"/" + getIconImage(hour.icon) + '.png'}
+                                                         height="24" viewBox="0 0 24 24" width="24">
+                                                    </img>
+                                                    <span className="font-semibold mt-1 text-sm">11:00</span>
+                                                    <span className="text-xs font-semibold text-gray-400">AM</span>
+                                                </div>
+                                            )
+                                        } else if (new Date(hour.timestamp).getHours() == 13){
+                                                return (
+                                                    <div key={index+":"+indexHour} className="flex flex-col items-center">
+                                                        <span className="font-semibold text-lg" key={index}>{hour.temperature}°C</span>
+                                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                             src={"/" + getIconImage(hour.icon) + '.png'}
+                                                             height="24" viewBox="0 0 24 24" width="24">
+                                                        </img>
+                                                        <span className="font-semibold mt-1 text-sm">1:00</span>
+                                                        <span className="text-xs font-semibold text-gray-400">PM</span>
+                                                    </div>
+                                                )
+                                        } else if (new Date(hour.timestamp).getHours() == 15){
+                                            return (
+                                                <div key={index+":"+indexHour} className="flex flex-col items-center">
+                                                    <span className="font-semibold text-lg" key={index}>{hour.temperature}°C</span>
+                                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                         src={"/" + getIconImage(hour.icon) + '.png'}
+                                                         height="24" viewBox="0 0 24 24" width="24">
+                                                    </img>
+                                                    <span className="font-semibold mt-1 text-sm">3:00</span>
+                                                    <span className="text-xs font-semibold text-gray-400">PM</span>
+                                                </div>
+                                            )
+                                        } else if (new Date(hour.timestamp).getHours() == 17){
+                                            return (
+                                                <div key={index+":"+indexHour} className="flex flex-col items-center">
+                                                    <span className="font-semibold text-lg" key={index}>{hour.temperature}°C</span>
+                                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                         src={"/" + getIconImage(hour.icon) + '.png'}
+                                                         height="24" viewBox="0 0 24 24" width="24">
+                                                    </img>
+                                                    <span className="font-semibold mt-1 text-sm">5:00</span>
+                                                    <span className="text-xs font-semibold text-gray-400">PM</span>
+                                                </div>
+                                            )
+                                        }}
+                                    }
+                                    )}
+
+                                </div>
+
+                            </div>
+                        )
+
                         /*return (
                             <div key="Weather"
                                 className="w-2/3 max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40">
