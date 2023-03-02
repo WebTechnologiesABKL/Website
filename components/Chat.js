@@ -173,7 +173,7 @@ export default function Chatbot() {
                 if (data.weather) {
                     let weather = data.weather
                     let time = new Date(data.time)
-                    changeVideo(weather, time)
+                    changeVideo(data.videoWeather, time)
                     let weatherObject = [null]
                     let currentDay = new Date(weather.weather.weather[0].timestamp)
                     weather.weather.weather.every((hour, index) => {
