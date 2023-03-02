@@ -372,16 +372,32 @@ export default function Chatbot() {
             }
             switch (icon) {
                 case "clear-day":
-                    setVideoName("Clear_day")
+                    if (isDay) {
+                        setVideoName("Clear_day")
+                    } else {
+                        setVideoName("Clear_night")
+                    }
                     break;
                 case "partly-cloudy-day":
-                    setVideoName("Clear_day")
+                    if (isDay) {
+                        setVideoName("Clear_day")
+                    } else {
+                        setVideoName("Clear_night")
+                    }
                     break;
                 case "partly-cloudy-night":
-                    setVideoName("Clear_night")
+                    if (isDay) {
+                        setVideoName("Clear_day")
+                    } else {
+                        setVideoName("Clear_night")
+                    }
                     break;
                 case "clear-night":
-                    setVideoName("Clear_night")
+                    if (isDay) {
+                        setVideoName("Clear_day")
+                    } else {
+                        setVideoName("Clear_night")
+                    }
                     break;
 
                 case "cloudy":
