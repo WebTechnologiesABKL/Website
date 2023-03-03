@@ -1,10 +1,4 @@
-import React, {useRef} from 'react';
-import {useState} from 'react';
-import Head from 'next/head';
-import {createGlobalStyle} from 'tailwind-styled-components';
-import Script from "next/script";
-import Image from "next/image";
-import {useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react';
 import io from 'socket.io-client'
 
 let socket
@@ -125,7 +119,14 @@ export default function Chatbot() {
     const videoRef = useRef();
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
-    const [videoName, setVideoName] = useState('Clear_day')
+
+    const [videoMode, setVideoMode] = useState(true);
+    let initialVideo = 'Clear_day'
+    if (!videoMode) {
+        initialVideo = 'minecraft'
+    }
+    const [videoName, setVideoName] = useState(initialVideo)
+
 
     useEffect(() => {
         socketInitializer(), []
@@ -154,15 +155,12 @@ export default function Chatbot() {
                 let message = data.message
                 setMessages(currentArray => {
                     return [...currentArray, {
-                        text: message,
-                        isUser: false,
-                        writing: false,
-                        image: null,
-                        forecast: null,
-                        weather: null
+                        text: message, isUser: false, writing: false, image: null, forecast: null, weather: null
                     }]
                 });
-                scrollToBottom();
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 100)
             })
 
             //Sarah Koch
@@ -170,12 +168,7 @@ export default function Chatbot() {
                 let message = data.message
                 setMessages(currentArray => {
                     return [...currentArray, {
-                        text: message,
-                        isUser: false,
-                        writing: false,
-                        image: null,
-                        forecast: null,
-                        weather: null
+                        text: message, isUser: false, writing: false, image: null, forecast: null, weather: null
                     }]
                 });
                 if (data.weather) {
@@ -244,7 +237,9 @@ export default function Chatbot() {
                         }]
                     });
                 }
-                scrollToBottom()
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 100)
             })
 
             //Sarah Koch
@@ -253,15 +248,12 @@ export default function Chatbot() {
                     console.log(data.image)
                     setMessages(currentArray => {
                         return [...currentArray, {
-                            text: null,
-                            isUser: false,
-                            writing: false,
-                            image: data.image,
-                            forecast: null,
-                            weather: null
+                            text: null, isUser: false, writing: false, image: data.image, forecast: null, weather: null
                         }]
                     });
-                    scrollToBottom();
+                    setTimeout(() => {
+                        scrollToBottom();
+                    }, 100)
                 }
             })
 
@@ -337,12 +329,7 @@ export default function Chatbot() {
 
                     setMessages(currentArray => {
                         return [...currentArray, {
-                            text: null,
-                            isUser: false,
-                            writing: false,
-                            image: null,
-                            forecast: forecast,
-                            weather: null
+                            text: null, isUser: false, writing: false, image: null, forecast: forecast, weather: null
                         }]
                     });
                     scrollToBottom();
@@ -357,114 +344,115 @@ export default function Chatbot() {
                 if (data.active) {
                     setMessages(currentArray => {
                         return [...currentArray, {
-                            text: "...",
-                            isUser: false,
-                            writing: true,
-                            image: null,
-                            forecast: null,
-                            weather: null
+                            text: "...", isUser: false, writing: true, image: null, forecast: null, weather: null
                         }]
                     });
                 } else {
                     setMessages((currentArray) => currentArray.filter((item) => !item.writing));
                 }
-                scrollToBottom();
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 100)
             })
         }
 
         //Tim-Lukas Arold, Sarah Koch
         function changeVideo(weather, time) {
-            let icon = weather.weather.weather[0].icon
-            let isDay = true
-            if (time.getHours() < 5 || time.getHours() > 18) {
-                isDay = false
-            }
-            switch (icon) {
-                case "clear-day":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
-                case "partly-cloudy-day":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
-                case "partly-cloudy-night":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
-                case "clear-night":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
+            if (videoMode) {
+                let icon = weather.weather.weather[0].icon
+                let isDay = true
+                if (time.getHours() < 5 || time.getHours() > 18) {
+                    isDay = false
+                }
+                switch (icon) {
+                    case "clear-day":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
+                    case "partly-cloudy-day":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
+                    case "partly-cloudy-night":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
+                    case "clear-night":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
 
-                case "cloudy":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
-                case "sunny":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
-                case "wind":
-                    if (isDay) {
-                        setVideoName("Clear_day")
-                    } else {
-                        setVideoName("Clear_night")
-                    }
-                    break;
-                case "fog":
-                    if (isDay) {
-                        setVideoName("Rain_day")
-                    } else {
-                        setVideoName("Rain_night")
-                    }
-                    break;
-                case "rain":
-                    if (isDay) {
-                        setVideoName("Rain_day")
-                    } else {
-                        setVideoName("Rain_night")
-                    }
-                    break;
-                case "snow":
-                    if (isDay) {
-                        setVideoName("Snow_day")
-                    } else {
-                        setVideoName("Snow_night")
-                    }
-                    break;
-                case "sleet":
-                    if (isDay) {
-                        setVideoName("Snow_day")
-                    } else {
-                        setVideoName("Snow_night")
-                    }
-                    break;
-                case "thunderstorm":
-                    if (isDay) {
-                        setVideoName("Thunder_day")
-                    } else {
-                        setVideoName("Thunder_night")
-                    }
-                    break;
+                    case "cloudy":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
+                    case "sunny":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
+                    case "wind":
+                        if (isDay) {
+                            setVideoName("Clear_day")
+                        } else {
+                            setVideoName("Clear_night")
+                        }
+                        break;
+                    case "fog":
+                        if (isDay) {
+                            setVideoName("Rain_day")
+                        } else {
+                            setVideoName("Rain_night")
+                        }
+                        break;
+                    case "rain":
+                        if (isDay) {
+                            setVideoName("Rain_day")
+                        } else {
+                            setVideoName("Rain_night")
+                        }
+                        break;
+                    case "snow":
+                        if (isDay) {
+                            setVideoName("Snow_day")
+                        } else {
+                            setVideoName("Snow_night")
+                        }
+                        break;
+                    case "sleet":
+                        if (isDay) {
+                            setVideoName("Snow_day")
+                        } else {
+                            setVideoName("Snow_night")
+                        }
+                        break;
+                    case "thunderstorm":
+                        if (isDay) {
+                            setVideoName("Thunder_day")
+                        } else {
+                            setVideoName("Thunder_night")
+                        }
+                        break;
+                }
+            } else {
+                setVideoName("minecraft")
             }
         }
     }
@@ -473,64 +461,91 @@ export default function Chatbot() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (input) {
-            if(input.charAt(0) == "/"){
+            if (input.charAt(0) == "/") {
                 setMessages(currentArray => {
                     return [...currentArray, {
-                        text: input,
-                        isUser: true,
-                        writing: false,
-                        image: null,
-                        forecast: null,
-                        weather: null
+                        text: input, isUser: true, writing: false, image: null, forecast: null, weather: null
                     }]
                 });
                 let command = input.split("/")[1].split(" ")[0];
-                if(command == "setWeather"){
+                if (command == "setWeather") {
                     let value = input.split("/")[1].split(" ")[1];
-                    if(!value){
+                    if (!value) {
                         value = '';
                     }
                     let response = "";
-                    switch (value){
-                        case 'thunder_night':
-                            setVideoName("Thunder_night");
-                            response = "Hintergrundvideo zu Gewitter bei Nacht geändert!"
-                            break;
-                        case 'thunder_day':
-                            setVideoName("Thunder_day");
-                            response = "Hintergrundvideo zu Gewitter bei Tag geändert!"
-                            break;
-                        case 'clear_day':
-                            setVideoName("Clear_day");
-                            response = "Hintergrundvideo zu Klar bei Tag geändert!"
-                            break;
-                        case 'clear_night':
-                            setVideoName("Clear_night");
-                            response = "Hintergrundvideo zu Klar bei Nacht geändert!"
-                            break;
-                        case 'snow_day':
-                            setVideoName("Snow_day");
-                            response = "Hintergrundvideo zu Schnee bei Tag geändert!"
-                            break;
-                        case 'snow_night':
-                            setVideoName("Snow_night");
-                            response = "Hintergrundvideo zu Schnee bei Nacht geändert!"
-                            break;
-                        case 'rain_day':
-                            setVideoName("Rain_day");
-                            response = "Hintergrundvideo zu Regen bei Tag geändert!"
-                            break;
-                        case 'rain_night':
-                            setVideoName("Rain_night");
-                            response = "Hintergrundvideo zu Regen bei Nacht geändert!"
-                            break;
-                        default:
-                            response = "Unbekannter Parameter '" + value + "', benutzen Sie '/help' für weitere Informationen!"
-                            break;
+                    if (videoMode) {
+
+                        switch (value) {
+                            case 'thunder_night':
+                                setVideoName("Thunder_night");
+                                response = "Hintergrundvideo zu Gewitter bei Nacht geändert!"
+                                break;
+                            case 'thunder_day':
+                                setVideoName("Thunder_day");
+                                response = "Hintergrundvideo zu Gewitter bei Tag geändert!"
+                                break;
+                            case 'clear_day':
+                                setVideoName("Clear_day");
+                                response = "Hintergrundvideo zu Klar bei Tag geändert!"
+                                break;
+                            case 'clear_night':
+                                setVideoName("Clear_night");
+                                response = "Hintergrundvideo zu Klar bei Nacht geändert!"
+                                break;
+                            case 'snow_day':
+                                setVideoName("Snow_day");
+                                response = "Hintergrundvideo zu Schnee bei Tag geändert!"
+                                break;
+                            case 'snow_night':
+                                setVideoName("Snow_night");
+                                response = "Hintergrundvideo zu Schnee bei Nacht geändert!"
+                                break;
+                            case 'rain_day':
+                                setVideoName("Rain_day");
+                                response = "Hintergrundvideo zu Regen bei Tag geändert!"
+                                break;
+                            case 'rain_night':
+                                setVideoName("Rain_night");
+                                response = "Hintergrundvideo zu Regen bei Nacht geändert!"
+                                break;
+                            default:
+                                response = "Unbekannter Parameter '" + value + "', benutzen Sie '/help' für weitere Informationen!"
+                                break;
+                        }
+                    } else {
+                        response = "Videomodus ist nicht aktiviert!"
+                        setVideoName("minecraft")
                     }
                     setMessages(currentArray => {
                         return [...currentArray, {
-                            text: response,
+                            text: response, isUser: false, writing: false, image: null, forecast: null, weather: null
+                        }]
+                    });
+                    scrollToBottom();
+
+                } else if (command == "toggleVideo") {
+                    setVideoMode(!videoMode);
+                    if (videoMode) {
+                        setVideoName("clear_day")
+                    } else {
+                        setVideoName("minecraft")
+                    }
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: "VideoMode ist jetzt " + videoMode + "!",
+                            isUser: false,
+                            writing: false,
+                            image: null,
+                            forecast: null,
+                            weather: null
+                        }]
+                    })
+                    scrollToBottom();
+                } else if (command == "help") {
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: "Folgen Kommandos sind möglich:" + "/setWeather [value] | (Setzt das Hintergrundvideo auf ein bestimmtes Wetter)" + "[value] || clear_day | clear_night | rain_day | rain_night | snow_day | snow_night | thunder_day | thunder_night |" + "/toggleVideo" + "Ändert das Hintergrundbild zwischen Bild und Video",
                             isUser: false,
                             writing: false,
                             image: null,
@@ -539,22 +554,7 @@ export default function Chatbot() {
                         }]
                     });
                     scrollToBottom();
-
-                }else if(command == "help"){
-                    setMessages(currentArray => {
-                        return [...currentArray, {
-                            text: "Folgen Kommandos sind möglich:" +
-                                "/setWeather [value] | (Setzt das Hintergrundvideo auf ein bestimmtes Wetter)" +
-                                "[value] || clear_day | clear_night | rain_day | rain_night | snow_day | snow_night | thunder_day | thunder_night |",
-                            isUser: false,
-                            writing: false,
-                            image: null,
-                            forecast: null,
-                            weather: null
-                        }]
-                    });
-                }
-                else{
+                } else {
                     setMessages(currentArray => {
                         return [...currentArray, {
                             text: "Unbekanntes Kommando benutze '/help' für Hilfe",
@@ -565,33 +565,31 @@ export default function Chatbot() {
                             weather: null
                         }]
                     });
+                    scrollToBottom();
                 }
-            }else{
+            } else {
                 setMessages(currentArray => {
                     return [...currentArray, {
-                        text: input,
-                        isUser: true,
-                        writing: false,
-                        image: null,
-                        forecast: null,
-                        weather: null
+                        text: input, isUser: true, writing: false, image: null, forecast: null, weather: null
                     }]
                 });
                 socket.emit('chat', {
                     'message': input
                 })
             }
-            scrollToBottom();
+            setTimeout(() => {
+                scrollToBottom();
+            }, 100)
             setInput('');
         }
     };
 
     //Tim-Lukas Arold
-    return (
-        <div className="h-screen flex flex-col bg-cover bg-no-repeat bg-fixed bg-center">
+    return (<div className="h-screen flex flex-col bg-cover bg-no-repeat bg-fixed bg-center">
             <video autoPlay muted loop className="video" ref={videoRef}>
                 <source src={"/" + videoName + ".mp4"} type="video/mp4"/>
             </video>
+
             <div className="h-full flex items-center justify-center">
                 <div className="h-4/5 w-5/6 sm:w-2/3 flex-col flex justify-center  bg-blue-500/50">
                     <header className="bg-white p-4 flex-shrink-0">
@@ -602,20 +600,17 @@ export default function Chatbot() {
                             if (message.text) {
                                 return (<div
                                     key={index}
-                                    className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft  ${
-                                        message.isUser ? 'ml-auto rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'mr-auto bg-slate-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
-                                    }`}
+                                    className={`bg-white p-2 mb-4 flex-shrink-0  w-fit w-min-3/4 text-black font-minecraft  ${message.isUser ? 'ml-auto rounded-bl-3xl text-right rounded-tl-3xl rounded-tr-xl' : 'mr-auto bg-slate-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'}`}
                                 >
                                     <p className="text-base">{message.text}</p>
                                 </div>)
                             } else if (message.image) {
                                 return (<div key={index}><img src={message.image}></img></div>)
                             } else if (message.forecast) {
-                                return (
-                                    <div key="forecast"
-                                         className="flex flex-col space-y-6 w-2/3 max-w-screen-sm bg-white p-10 mt-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
+                                return (<div key="forecast"
+                                             className="flex flex-col space-y-6 w-2/3 max-w-screen-sm bg-white p-10 mt-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
                                         {message.forecast.map((day, indexDay) => {
-                                            if (indexDay != 0) {
+                                            if (indexDay !== 0) {
                                                 return (<div key={index + ':' + indexDay}
                                                              className="flex justify-between items-center">
                                                     <span
@@ -636,12 +631,10 @@ export default function Chatbot() {
                                                 </div>)
                                             }
                                         })}
-                                    </div>
-                                )
+                                    </div>)
                             } else if (message.weather) {
-                                return (
-                                    <div key="weather first day"
-                                         className="w-full md:w-2/3 md:max-w-screen-sm bg-white p-2 md:p-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
+                                return (<div key="weather first day"
+                                             className="w-full md:w-2/3 md:max-w-screen-sm bg-white p-2 md:p-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
                                         <div className="flex justify-between">
                                             <div className="flex flex-col">
                                                 <span className="text-2xl md:text-6xl font-bold"
@@ -650,7 +643,8 @@ export default function Chatbot() {
                                                       key={index}>{message.weather[0].city}, {message.weather[0].country}</span>
                                             </div>
                                             <div className="flex flex-col items-center justify-between w-1/4 pr-10">
-                                                <span className="text-xl md:text-4xl font-semibold">{message.weather[0].maxRain * 100}%</span>
+                                                <span
+                                                    className="text-xl md:text-4xl font-semibold">{message.weather[0].maxRain * 100}%</span>
                                                 <img className="h-10 smd:h-20 w-10 md:w-20"
                                                      src="/icon_rainDrop.png"
                                                      alt="raindrop"
@@ -668,118 +662,104 @@ export default function Chatbot() {
                                         <div className="flex justify-between mt-12">
 
                                             {message.weather.map((hour, indexHour) => {
-                                                    if (indexHour != 0) {
-                                                        if (new Date(hour.timestamp).getHours() == 9) {
-                                                            return (
-                                                                <div key={index + ":" + indexHour}
+                                                if (indexHour !== 0) {
+                                                    if (new Date(hour.timestamp).getHours() == 9) {
+                                                        return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
                                                                     <span className="font-semibold text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
-                                                                    <img
-                                                                        className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                                                        src={"/" + getIconImage(hour.icon) + '.png'}
-                                                                        height="24" viewBox="0 0 24 24" width="24">
-                                                                    </img>
-                                                                    <span
-                                                                        className="font-semibold mt-1 text-sm">09:00</span>
-                                                                    <span
-                                                                        className="text-xs font-semibold text-gray-400">AM</span>
-                                                                </div>
-                                                            )
-                                                        } else if (new Date(hour.timestamp).getHours() == 11) {
-                                                            return (
-                                                                <div key={index + ":" + indexHour}
+                                                                <img
+                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    src={"/" + getIconImage(hour.icon) + '.png'}
+                                                                    height="24" viewBox="0 0 24 24" width="24">
+                                                                </img>
+                                                                <span
+                                                                    className="font-semibold mt-1 text-sm">09:00</span>
+                                                                <span
+                                                                    className="text-xs font-semibold text-gray-400">AM</span>
+                                                            </div>)
+                                                    } else if (new Date(hour.timestamp).getHours() == 11) {
+                                                        return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
                                                                     <span className="font-semibold text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
-                                                                    <img
-                                                                        className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                                                        src={"/" + getIconImage(hour.icon) + '.png'}
-                                                                        height="24" viewBox="0 0 24 24" width="24">
-                                                                    </img>
-                                                                    <span
-                                                                        className="font-semibold mt-1 text-sm">11:00</span>
-                                                                    <span
-                                                                        className="text-xs font-semibold text-gray-400">AM</span>
-                                                                </div>
-                                                            )
-                                                        } else if (new Date(hour.timestamp).getHours() == 13) {
-                                                            return (
-                                                                <div key={index + ":" + indexHour}
+                                                                <img
+                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    src={"/" + getIconImage(hour.icon) + '.png'}
+                                                                    height="24" viewBox="0 0 24 24" width="24">
+                                                                </img>
+                                                                <span
+                                                                    className="font-semibold mt-1 text-sm">11:00</span>
+                                                                <span
+                                                                    className="text-xs font-semibold text-gray-400">AM</span>
+                                                            </div>)
+                                                    } else if (new Date(hour.timestamp).getHours() == 13) {
+                                                        return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
                                                                     <span className="font-semibold text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
-                                                                    <img
-                                                                        className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                                                        src={"/" + getIconImage(hour.icon) + '.png'}
-                                                                        height="24" viewBox="0 0 24 24" width="24">
-                                                                    </img>
-                                                                    <span
-                                                                        className="font-semibold mt-1 text-sm">01:00</span>
-                                                                    <span
-                                                                        className="text-xs font-semibold text-gray-400">PM</span>
-                                                                </div>
-                                                            )
-                                                        } else if (new Date(hour.timestamp).getHours() == 15) {
-                                                            return (
-                                                                <div key={index + ":" + indexHour}
+                                                                <img
+                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    src={"/" + getIconImage(hour.icon) + '.png'}
+                                                                    height="24" viewBox="0 0 24 24" width="24">
+                                                                </img>
+                                                                <span
+                                                                    className="font-semibold mt-1 text-sm">01:00</span>
+                                                                <span
+                                                                    className="text-xs font-semibold text-gray-400">PM</span>
+                                                            </div>)
+                                                    } else if (new Date(hour.timestamp).getHours() == 15) {
+                                                        return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
                                                                     <span className="font-semibold text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
-                                                                    <img
-                                                                        className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                                                        src={"/" + getIconImage(hour.icon) + '.png'}
-                                                                        height="24" viewBox="0 0 24 24" width="24">
-                                                                    </img>
-                                                                    <span
-                                                                        className="font-semibold mt-1 text-sm">03:00</span>
-                                                                    <span
-                                                                        className="text-xs font-semibold text-gray-400">PM</span>
-                                                                </div>
-                                                            )
-                                                        } else if (new Date(hour.timestamp).getHours() == 17) {
-                                                            return (
-                                                                <div key={index + ":" + indexHour}
+                                                                <img
+                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    src={"/" + getIconImage(hour.icon) + '.png'}
+                                                                    height="24" viewBox="0 0 24 24" width="24">
+                                                                </img>
+                                                                <span
+                                                                    className="font-semibold mt-1 text-sm">03:00</span>
+                                                                <span
+                                                                    className="text-xs font-semibold text-gray-400">PM</span>
+                                                            </div>)
+                                                    } else if (new Date(hour.timestamp).getHours() == 17) {
+                                                        return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
                                                                     <span className="font-semibold text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
-                                                                    <img
-                                                                        className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                                                        src={"/" + getIconImage(hour.icon) + '.png'}
-                                                                        height="24" viewBox="0 0 24 24" width="24">
-                                                                    </img>
-                                                                    <span
-                                                                        className="font-semibold mt-1 text-sm">05:00</span>
-                                                                    <span
-                                                                        className="text-xs font-semibold text-gray-400">PM</span>
-                                                                </div>
-                                                            )
-                                                        } else if (new Date(hour.timestamp).getHours() == 19) {
-                                                            return (
-                                                                <div key={index + ":" + indexHour}
+                                                                <img
+                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    src={"/" + getIconImage(hour.icon) + '.png'}
+                                                                    height="24" viewBox="0 0 24 24" width="24">
+                                                                </img>
+                                                                <span
+                                                                    className="font-semibold mt-1 text-sm">05:00</span>
+                                                                <span
+                                                                    className="text-xs font-semibold text-gray-400">PM</span>
+                                                            </div>)
+                                                    } else if (new Date(hour.timestamp).getHours() == 19) {
+                                                        return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
                                                                     <span className="font-semibold text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
-                                                                    <img
-                                                                        className="h-10 w-10 fill-current text-gray-400 mt-3"
-                                                                        src={"/" + getIconImage(hour.icon) + '.png'}
-                                                                        height="24" viewBox="0 0 24 24" width="24">
-                                                                    </img>
-                                                                    <span
-                                                                        className="font-semibold mt-1 text-sm">07:00</span>
-                                                                    <span
-                                                                        className="text-xs font-semibold text-gray-400">PM</span>
-                                                                </div>
-                                                            )
-                                                        }
+                                                                <img
+                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    src={"/" + getIconImage(hour.icon) + '.png'}
+                                                                    height="24" viewBox="0 0 24 24" width="24">
+                                                                </img>
+                                                                <span
+                                                                    className="font-semibold mt-1 text-sm">07:00</span>
+                                                                <span
+                                                                    className="text-xs font-semibold text-gray-400">PM</span>
+                                                            </div>)
                                                     }
                                                 }
-                                            )}
+                                            })}
 
                                         </div>
 
-                                    </div>
-                                )
+                                    </div>)
                             }
                         })}
                     </main>
@@ -799,6 +779,5 @@ export default function Chatbot() {
                     </footer>
                 </div>
             </div>
-        </div>
-    );
+        </div>);
 }
