@@ -608,26 +608,26 @@ export default function Chatbot() {
                                 return (<div key={index}><img src={message.image}></img></div>)
                             } else if (message.forecast) {
                                 return (<div key="forecast"
-                                             className="flex flex-col space-y-6 w-2/3 max-w-screen-sm bg-white p-10 mt-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
+                                             className="flex flex-col space-y-6 w-full md:w-2/3 md: max-w-screen-sm bg-white p-2 md:p-10 mt-5 md:mt-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
                                         {message.forecast.map((day, indexDay) => {
                                             if (indexDay !== 0) {
                                                 return (<div key={index + ':' + indexDay}
                                                              className="flex justify-between items-center">
                                                     <span
-                                                        className="font-black text-sm w-1/4">{convertDateToString(new Date(day[0].day), true, false)}</span>
-                                                    <div className="flex items-center justify-end w-1/4 pr-10">
+                                                        className="font-black text-xs md:text-sm w-1/4">{convertDateToString(new Date(day[0].day), true, false)}</span>
+                                                    <div className="flex items-center w-1/4 pr-10">
                                                         <span className="font-semibold">{day[0].maxRain * 100}%</span>
-                                                        <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                        <img className="h-5 md:h-10 w-5 md:w-10 fill-current text-gray-400 mt-3"
                                                              src="/icon_rainDrop.png"
                                                              height="24" viewBox="0 0 24 24" width="24">
                                                         </img>
                                                     </div>
-                                                    <img className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                    <img className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                          src={"/" + getIconImage(day[0].icon) + '.png'}
                                                          height="24" viewBox="0 0 24 24" width="24">
                                                     </img>
                                                     <span
-                                                        className="font-semibold text-lg w-1/4 text-right">{day[0].min}°C / {day[0].max}°C</span>
+                                                        className="font-semibold text-xs md:text-lg w-1/4 text-right">{day[0].min}°C / {day[0].max}°C</span>
                                                 </div>)
                                             }
                                         })}
@@ -645,10 +645,10 @@ export default function Chatbot() {
                                             <div className="flex flex-col items-center justify-between w-1/4 pr-10">
                                                 <span
                                                     className="text-xl md:text-4xl font-semibold">{message.weather[0].maxRain * 100}%</span>
-                                                <img className="h-10 smd:h-20 w-10 md:w-20"
+                                                <img className="h-10 smd:h-30 w-10 md:w-30 fill-current"
                                                      src="/icon_rainDrop.png"
                                                      alt="raindrop"
-                                                     height="500" width="500">
+                                                     height="30" width="30">
                                                 </img>
                                             </div>
 
@@ -659,97 +659,97 @@ export default function Chatbot() {
                                             </img>
                                         </div>
 
-                                        <div className="flex justify-between mt-12">
+                                        <div className="flex justify-between mt-12 w-full">
 
                                             {message.weather.map((hour, indexHour) => {
                                                 if (indexHour !== 0) {
                                                     if (new Date(hour.timestamp).getHours() == 9) {
                                                         return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
-                                                                    <span className="font-semibold text-lg"
+                                                                    <span className="font-semibold text-sm md:text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
                                                                 <img
-                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                                     src={"/" + getIconImage(hour.icon) + '.png'}
                                                                     height="24" viewBox="0 0 24 24" width="24">
                                                                 </img>
                                                                 <span
-                                                                    className="font-semibold mt-1 text-sm">09:00</span>
+                                                                    className="font-semibold mt-1 text-xs md:text-sm">09:00</span>
                                                                 <span
                                                                     className="text-xs font-semibold text-gray-400">AM</span>
                                                             </div>)
                                                     } else if (new Date(hour.timestamp).getHours() == 11) {
                                                         return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
-                                                                    <span className="font-semibold text-lg"
+                                                                    <span className="font-semibold text-sm md:text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
                                                                 <img
-                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                                     src={"/" + getIconImage(hour.icon) + '.png'}
                                                                     height="24" viewBox="0 0 24 24" width="24">
                                                                 </img>
                                                                 <span
-                                                                    className="font-semibold mt-1 text-sm">11:00</span>
+                                                                    className="font-semibold mt-1 text-xs md:text-sm">11:00</span>
                                                                 <span
                                                                     className="text-xs font-semibold text-gray-400">AM</span>
                                                             </div>)
                                                     } else if (new Date(hour.timestamp).getHours() == 13) {
                                                         return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
-                                                                    <span className="font-semibold text-lg"
+                                                                    <span className="font-semibold text-sm md:text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
                                                                 <img
-                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                                     src={"/" + getIconImage(hour.icon) + '.png'}
                                                                     height="24" viewBox="0 0 24 24" width="24">
                                                                 </img>
                                                                 <span
-                                                                    className="font-semibold mt-1 text-sm">01:00</span>
+                                                                    className="font-semibold mt-1 text-xs md:text-sm">01:00</span>
                                                                 <span
                                                                     className="text-xs font-semibold text-gray-400">PM</span>
                                                             </div>)
                                                     } else if (new Date(hour.timestamp).getHours() == 15) {
                                                         return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
-                                                                    <span className="font-semibold text-lg"
+                                                                    <span className="font-semibold text-sm md:text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
                                                                 <img
-                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                                     src={"/" + getIconImage(hour.icon) + '.png'}
                                                                     height="24" viewBox="0 0 24 24" width="24">
                                                                 </img>
                                                                 <span
-                                                                    className="font-semibold mt-1 text-sm">03:00</span>
+                                                                    className="font-semibold mt-1 text-xs md:text-sm">03:00</span>
                                                                 <span
                                                                     className="text-xs font-semibold text-gray-400">PM</span>
                                                             </div>)
                                                     } else if (new Date(hour.timestamp).getHours() == 17) {
                                                         return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
-                                                                    <span className="font-semibold text-lg"
+                                                                    <span className="font-semibold text-sm md:text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
                                                                 <img
-                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                                     src={"/" + getIconImage(hour.icon) + '.png'}
                                                                     height="24" viewBox="0 0 24 24" width="24">
                                                                 </img>
                                                                 <span
-                                                                    className="font-semibold mt-1 text-sm">05:00</span>
+                                                                    className="font-semibold mt-1 text-xs md:text-sm">05:00</span>
                                                                 <span
                                                                     className="text-xs font-semibold text-gray-400">PM</span>
                                                             </div>)
                                                     } else if (new Date(hour.timestamp).getHours() == 19) {
                                                         return (<div key={index + ":" + indexHour}
                                                                      className="flex flex-col items-center">
-                                                                    <span className="font-semibold text-lg"
+                                                                    <span className="font-semibold text-sm md:text-lg"
                                                                           key={index}>{hour.temperature}°C</span>
                                                                 <img
-                                                                    className="h-10 w-10 fill-current text-gray-400 mt-3"
+                                                                    className="h-7 md:h-10 w-7 md:w-10 fill-current text-gray-400 mt-3"
                                                                     src={"/" + getIconImage(hour.icon) + '.png'}
                                                                     height="24" viewBox="0 0 24 24" width="24">
                                                                 </img>
                                                                 <span
-                                                                    className="font-semibold mt-1 text-sm">07:00</span>
+                                                                    className="font-semibold mt-1 text-xs md:text-sm">07:00</span>
                                                                 <span
                                                                     className="text-xs font-semibold text-gray-400">PM</span>
                                                             </div>)
