@@ -542,10 +542,16 @@ export default function Chatbot() {
                         }]
                     })
                     scrollToBottom();
-                } else if (command == "help") {
+                } else if (command == "creeper") {
+                    let lastVideo = videoName;
+                    setVideoName("creeper");
+                    setTimeout(() => {
+                        setVideoName(lastVideo);
+                    }, 9000)
+                }else if (command == "help") {
                     setMessages(currentArray => {
                         return [...currentArray, {
-                            text: "Folgen Kommandos sind möglich:" + "/setWeather [value] | (Setzt das Hintergrundvideo auf ein bestimmtes Wetter)" + "[value] || clear_day | clear_night | rain_day | rain_night | snow_day | snow_night | thunder_day | thunder_night |" + "/toggleVideo" + "Ändert das Hintergrundbild zwischen Bild und Video",
+                            text: "Folgen Kommandos sind möglich:" + "/setWeather [value] | (Setzt das Hintergrundvideo auf ein bestimmtes Wetter) | \n" + "[value] || clear_day | clear_night | rain_day | rain_night | snow_day | snow_night | thunder_day | thunder_night | \n",
                             isUser: false,
                             writing: false,
                             image: null,
