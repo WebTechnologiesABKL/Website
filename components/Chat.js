@@ -592,7 +592,7 @@ export default function Chatbot() {
 
     //Tim-Lukas Arold
     return (<div className="h-screen flex flex-col bg-cover bg-no-repeat bg-fixed bg-center">
-            <video autoPlay muted loop className="video" ref={videoRef}>
+            <video autoPlay muted loop playsinline className="video" ref={videoRef}>
                 <source src={"/" + videoName + ".mp4"} type="video/mp4"/>
             </video>
 
