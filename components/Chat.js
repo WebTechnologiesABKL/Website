@@ -204,7 +204,7 @@ export default function Chatbot() {
                             weatherObject[0].max = hour.temperature
                         }
                         if (!weatherObject[0].maxRain || weatherObject[0].maxRain < hour.precipitation) {
-                            weatherObject[0].maxRain = hour.precipitation
+                            weatherObject[0].maxRain = hour.precipitation.toFixed(2)
                         }
                         if (!weatherObject[0].icon || new Date(hour.timestamp).getHours() == 12) {
                             weatherObject[0].icon = hour.icon
@@ -298,7 +298,7 @@ export default function Chatbot() {
                                     forecast[dayNumber][0].max = hour.temperature
                                 }
                                 if (!forecast[dayNumber][0].maxRain || forecast[dayNumber][0].maxRain < hour.precipitation) {
-                                    forecast[dayNumber][0].maxRain = hour.precipitation
+                                    forecast[dayNumber][0].maxRain = hour.precipitation.toFixed(2)
                                 }
                                 if (!forecast[dayNumber][0].icon || new Date(hour.timestamp).getHours() == 12) {
                                     forecast[dayNumber][0].icon = hour.icon
@@ -622,7 +622,7 @@ export default function Chatbot() {
                                                     <span
                                                         className="font-black text-xs md:text-sm w-1/4">{convertDateToString(new Date(day[0].day), true, false)}</span>
                                                     <div className="flex items-center w-1/4 pr-10">
-                                                        <span className="font-semibold">{day[0].maxRain * 100}%</span>
+                                                        <span className="font-semibold">{day[0].maxRain}mm</span>
                                                         <img className="h-5 md:h-10 w-5 md:w-10 fill-current text-gray-400 mt-3"
                                                              src="/icon_rainDrop.png"
                                                              height="24" viewBox="0 0 24 24" width="24">
@@ -650,7 +650,7 @@ export default function Chatbot() {
                                             </div>
                                             <div className="flex flex-col items-center justify-between w-1/4 pr-10">
                                                 <span
-                                                    className="text-xl md:text-4xl font-semibold">{message.weather[0].maxRain * 100}%</span>
+                                                    className="text-xl md:text-4xl font-semibold">{message.weather[0].maxRain}mm</span>
                                                 <img className="h-10 smd:h-30 w-10 md:w-30 fill-current"
                                                      src="/icon_rainDrop.png"
                                                      alt="raindrop"
