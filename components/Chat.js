@@ -473,20 +473,115 @@ export default function Chatbot() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (input) {
-            setMessages(currentArray => {
-                return [...currentArray, {
-                    text: input,
-                    isUser: true,
-                    writing: false,
-                    image: null,
-                    forecast: null,
-                    weather: null
-                }]
-            });
+            if(input.charAt(0) == "/"){
+                setMessages(currentArray => {
+                    return [...currentArray, {
+                        text: input,
+                        isUser: true,
+                        writing: false,
+                        image: null,
+                        forecast: null,
+                        weather: null
+                    }]
+                });
+                let command = input.split("/")[1].split(" ")[0];
+                if(command == "setWeather"){
+                    let value = input.split("/")[1].split(" ")[1];
+                    if(!value){
+                        value = '';
+                    }
+                    let response = "";
+                    switch (value){
+                        case 'thunder_night':
+                            setVideoName("Thunder_night");
+                            response = "Hintergrundvideo zu Gewitter bei Nacht geändert!"
+                            break;
+                        case 'thunder_day':
+                            setVideoName("Thunder_day");
+                            response = "Hintergrundvideo zu Gewitter bei Tag geändert!"
+                            break;
+                        case 'clear_day':
+                            setVideoName("Clear_day");
+                            response = "Hintergrundvideo zu Klar bei Tag geändert!"
+                            break;
+                        case 'clear_night':
+                            setVideoName("Clear_night");
+                            response = "Hintergrundvideo zu Klar bei Nacht geändert!"
+                            break;
+                        case 'snow_day':
+                            setVideoName("Snow_day");
+                            response = "Hintergrundvideo zu Schnee bei Tag geändert!"
+                            break;
+                        case 'snow_night':
+                            setVideoName("Snow_night");
+                            response = "Hintergrundvideo zu Schnee bei Nacht geändert!"
+                            break;
+                        case 'rain_day':
+                            setVideoName("Rain_day");
+                            response = "Hintergrundvideo zu Regen bei Tag geändert!"
+                            break;
+                        case 'rain_night':
+                            setVideoName("Rain_night");
+                            response = "Hintergrundvideo zu Regen bei Nacht geändert!"
+                            break;
+                        default:
+                            response = "Unbekannter Parameter '" + value + "', benutzen Sie '/help' für weitere Informationen!"
+                            break;
+                    }
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: response,
+                            isUser: false,
+                            writing: false,
+                            image: null,
+                            forecast: null,
+                            weather: null
+                        }]
+                    });
+                    scrollToBottom();
+
+                }else if(command == "help"){
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: "Folgen Kommandos sind möglich:" +
+                                "/setWeather [value] | (Setzt das Hintergrundvideo auf ein bestimmtes Wetter)" +
+                                "[value] || clear_day | clear_night | rain_day | rain_night | snow_day | snow_night | thunder_day | thunder_night |",
+                            isUser: false,
+                            writing: false,
+                            image: null,
+                            forecast: null,
+                            weather: null
+                        }]
+                    });
+                }
+                else{
+                    setMessages(currentArray => {
+                        return [...currentArray, {
+                            text: "Unbekanntes Kommando benutze '/help' für Hilfe",
+                            isUser: false,
+                            writing: false,
+                            image: null,
+                            forecast: null,
+                            weather: null
+                        }]
+                    });
+                }
+            }else{
+                setMessages(currentArray => {
+                    return [...currentArray, {
+                        text: input,
+                        isUser: true,
+                        writing: false,
+                        image: null,
+                        forecast: null,
+                        weather: null
+                    }]
+                });
+                socket.emit('chat', {
+                    'message': input
+                })
+            }
             scrollToBottom();
-            socket.emit('chat', {
-                'message': input
-            })
             setInput('');
         }
     };
