@@ -12,6 +12,7 @@ let socket
 
 const GlobalStyle = 'createGlobalStyle'
 
+//Yannick Bruns, Sarah Koch
 function convertDateToString(dateObject, date, time) {
     let dateString = "";
     if (date) {
@@ -68,13 +69,15 @@ function convertDateToString(dateObject, date, time) {
     return dateString;
 }
 
+//Tim-Lukas Arold
 function scrollToBottom() {
     let box = document.getElementById('box');
     box.scrollTop = box.scrollHeight;
 }
 
+//Yannick Bruns, Sarah Koch
 function getIconImage(icon) {
-    let iconImage = 'cloudy';
+    let iconImage = 'icon_cloudy';
 
     switch (icon) {
         case "clear-day":
@@ -134,15 +137,19 @@ export default function Chatbot() {
 
     const socketInitializer = async () => {
         if (!socket || !socket.connected) {
-            //await fetch("/api/socket")
             socket = io('ws://' + process.env.SERVER + ':8085')
 
+            //Tim-Lukas Arold, Sarah Koch
             socket.on('connect', () => {
                 console.log('Connected')
             })
+
+            //Tim-Lukas Arold, Sarah Koch
             socket.on('disconnect', () => {
                 console.log('Disconnected')
             })
+
+            //Tim-Lukas Arold, Sarah Koch
             socket.on("welcome", function (data) {
                 let message = data.message
                 setMessages(currentArray => {
@@ -158,6 +165,7 @@ export default function Chatbot() {
                 scrollToBottom();
             })
 
+            //Sarah Koch
             socket.on("chat", function (data) {
                 let message = data.message
                 setMessages(currentArray => {
@@ -205,7 +213,7 @@ export default function Chatbot() {
                         if (!weatherObject[0].maxRain || weatherObject[0].maxRain < hour.precipitation) {
                             weatherObject[0].maxRain = hour.precipitation
                         }
-                        if (!weatherObject[0].icon || new Date(weatherObject[0].timestamp).getHours() == 12) {
+                        if (!weatherObject[0].icon || new Date(hour.timestamp).getHours() == 12) {
                             weatherObject[0].icon = hour.icon
                         }
                         weatherObject[0].average += hour.temperature
@@ -225,8 +233,6 @@ export default function Chatbot() {
                         }
                         return true;
                     })
-                    console.log("WeatherObject:")
-                    console.log(weatherObject)
                     setMessages(currentArray => {
                         return [...currentArray, {
                             text: null,
@@ -241,6 +247,7 @@ export default function Chatbot() {
                 scrollToBottom()
             })
 
+            //Sarah Koch
             socket.on("image", function (data) {
                 if (data.image) {
                     console.log(data.image)
@@ -258,6 +265,7 @@ export default function Chatbot() {
                 }
             })
 
+            //Tim-Lukas Arold, Sarah Koch
             socket.on("forecast", function (data) {
                 if (data.forecast) {
                     let forecast = []
@@ -300,7 +308,7 @@ export default function Chatbot() {
                                 if (!forecast[dayNumber][0].maxRain || forecast[dayNumber][0].maxRain < hour.precipitation) {
                                     forecast[dayNumber][0].maxRain = hour.precipitation
                                 }
-                                if (!forecast[dayNumber][0].icon || new Date(forecast[dayNumber][0].timestamp).getHours() == 12) {
+                                if (!forecast[dayNumber][0].icon || new Date(hour.timestamp).getHours() == 12) {
                                     forecast[dayNumber][0].icon = hour.icon
                                 }
                                 forecast[dayNumber][0].average += hour.temperature
@@ -323,11 +331,10 @@ export default function Chatbot() {
                     })
                     if (!forecast[dayNumber][0].averageCalculated) {
                         forecast[dayNumber][0].average /= forecast[dayNumber][0].values
-                        forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(2)
+                        forecast[dayNumber][0].average = forecast[dayNumber][0].average.toFixed(1)
                         forecast[dayNumber][0].averageCalculated = true
                     }
-                    console.log("Forecast Object:")
-                    console.log(forecast)
+
                     setMessages(currentArray => {
                         return [...currentArray, {
                             text: null,
@@ -345,6 +352,7 @@ export default function Chatbot() {
                 }
             })
 
+            //Sarah Koch
             socket.on("writing", function (data) {
                 if (data.active) {
                     setMessages(currentArray => {
@@ -364,6 +372,7 @@ export default function Chatbot() {
             })
         }
 
+        //Tim-Lukas Arold, Sarah Koch
         function changeVideo(weather, time) {
             let icon = weather.weather.weather[0].icon
             let isDay = true
@@ -458,9 +467,9 @@ export default function Chatbot() {
                     break;
             }
         }
-
     }
 
+    //Tim-Lukas Arold
     const handleSubmit = (e) => {
         e.preventDefault();
         if (input) {
@@ -482,13 +491,14 @@ export default function Chatbot() {
         }
     };
 
+    //Tim-Lukas Arold
     return (
         <div className="h-screen flex flex-col bg-cover bg-no-repeat bg-fixed bg-center">
             <video autoPlay muted loop className="video" ref={videoRef}>
                 <source src={"/" + videoName + ".mp4"} type="video/mp4"/>
             </video>
             <div className="h-full flex items-center justify-center">
-                <div className="h-4/5 w-2/3 flex-col flex justify-center  bg-blue-500/50">
+                <div className="h-4/5 w-5/6 sm:w-2/3 flex-col flex justify-center  bg-blue-500/50">
                     <header className="bg-white p-4 flex-shrink-0">
                         <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
                     </header>
@@ -533,32 +543,30 @@ export default function Chatbot() {
                                         })}
                                     </div>
                                 )
-                                //return (<div key={index}><table><caption>Wetter vorschau</caption><thead><tr><th>Datum</th><th>Min</th><th>Max</th><th>Durchschnitt</th></tr></thead><tbody>{message.forecast.map((day, indexDay) => {
-                                //return (<tr key={index + ':' + indexDay}><td>{convertDateToString(new Date(day[0].day), 1, 0)}&nbsp;&nbsp;</td><td>{day[0].min}°C&nbsp;&nbsp;</td><td>{day[0].max}°C&nbsp;&nbsp;</td><td>{day[0].average}°C&nbsp;&nbsp;</td></tr>)
-                                //})}</tbody></table></div>)
                             } else if (message.weather) {
                                 return (
                                     <div key="weather first day"
-                                         className="w-2/3 max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
+                                         className="w-full md:w-2/3 md:max-w-screen-sm bg-white p-2 md:p-10 rounded-xl ring-8 ring-white ring-opacity-40 text-black">
                                         <div className="flex justify-between">
                                             <div className="flex flex-col">
-                                                <span className="text-6xl font-bold"
+                                                <span className="text-2xl md:text-6xl font-bold"
                                                       key={index}>{message.weather[0].average}°C</span>
-                                                <span className="font-semibold mt-1 text-gray-500"
+                                                <span className="text-xs md:text-md font-semibold mt-1 text-gray-500"
                                                       key={index}>{message.weather[0].city}, {message.weather[0].country}</span>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-4xl font-bold">{message.weather[0].maxRain * 100}%</span>
-                                                <img className="h-20 w-20 fill-current text-gray-400 mt-3"
+                                            <div className="flex flex-col items-center justify-between w-1/4 pr-10">
+                                                <span className="text-xl md:text-4xl font-semibold">{message.weather[0].maxRain * 100}%</span>
+                                                <img className="h-10 smd:h-20 w-10 md:w-20"
                                                      src="/icon_rainDrop.png"
-                                                     height="24" viewBox="0 0 24 24" width="24">
+                                                     alt="raindrop"
+                                                     height="500" width="500">
                                                 </img>
                                             </div>
 
                                             <img
                                                 src={"/" + getIconImage(message.weather[0].icon) + '.png'}
-                                                className="h-24 w-24 "
-                                                height="24" viewBox="0 0 24 24" width="24">
+                                                className="h-20 md:h-24 w-20 md:w-24 "
+                                                height="24" width="24">
                                             </img>
                                         </div>
 
