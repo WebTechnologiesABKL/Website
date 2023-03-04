@@ -592,14 +592,14 @@ export default function Chatbot() {
 
     //Tim-Lukas Arold
     return (<div className="h-screen flex flex-col bg-cover bg-no-repeat bg-fixed bg-center">
-            <video autoPlay muted loop playsinline className="video" ref={videoRef}>
+            <video autoPlay muted loop playsInline className="video" ref={videoRef}>
                 <source src={"/" + videoName + ".mp4"} type="video/mp4"/>
             </video>
 
             <div className="h-full flex items-center justify-center">
                 <div className="h-4/5 w-5/6 sm:w-2/3 flex-col flex justify-center  bg-blue-500/50">
                     <header className="bg-white p-4 flex-shrink-0">
-                        <h1 className="text-xl font-medium text-black font-minecraft">Chatbot</h1>
+                        <h1 className="text-xl font-medium text-black font-minecraft">McSteve</h1>
                     </header>
                     <main id="box" className="flex-1 overflow-y-scroll h-full justify-end overscroll-contain p-4">
                         {messages.map((message, index) => {
